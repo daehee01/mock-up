@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>위신싸 — 위스키가 신발보다 싸다</title>
+<!--
+  위신싸 메인 랜딩 (ops-b2c) — 모바일 퍼스트 정적 목업
+  디자인: ops-sales 덱 언어(포레스트 그린 + 앰버, 에디토리얼). DESIGN.md 준수.
+  상품 데이터는 {{ products[] }} 주석, 샘플 렌더. 클릭 → product.html. 기획서: ./PLAN.md
+-->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="stylesheet" as="style" crossorigin
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<link rel="stylesheet" href="style.css" />
+<style>
+  /* 메인 전용 */
+  .hero-home{padding:20px var(--pad) 0;min-height:90vh;display:flex;flex-direction:column;}
+  .hero-home .mark{font-size:clamp(66px,22vw,108px);margin:36px 0 20px;}
+  .hero-home .tagline{font-size:19px;font-weight:700;color:var(--ink);letter-spacing:-0.025em;margin-bottom:14px;}
+  .hero-home .tagline b{color:var(--amber);}
+  .hero-home .sub{font-size:16px;color:var(--ink-80);line-height:1.66;letter-spacing:-0.015em;max-width:300px;margin-bottom:26px;}
+  .hero-home .bottle{position:absolute;right:-22px;bottom:-6px;width:min(56%,250px);z-index:1;
+    filter:drop-shadow(0 24px 36px rgba(29,29,31,.22));}
+  .hero-home .foot-row{margin-top:auto;display:flex;align-items:center;justify-content:flex-start;padding:24px 0 28px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER (공통) -->
+  <header class="hdr">
+    <a href="index.html" class="logo mark">위신<b>싸</b></a>
+    <nav class="nav">
+      <a href="index.html#pickup">픽업매장</a>
+      <a href="about.html">About</a>
+    </nav>
+  </header>
+
+  <!-- HERO — 브랜드 퍼스트, 1헤드라인·1문장·1CTA·1이미지 -->
+  <section class="hero hero--light hero-home">
+    <!-- {{ hero.bottle }} : 대표 보틀 (edge bleed, 카드 아님) -->
+    <img class="bottle rise d3" src="https://cdn.veluga.kr/drinks/pv/31081.png" alt="위신싸 대표 보틀" />
+    <div class="inner" style="flex:1;display:flex;flex-direction:column;">
+      <div class="mark rise d1">위신<b>싸</b></div>
+      <div class="tagline rise d2">앗! <b>위</b>스키가 <b>신</b>발보다 <b>싸</b>다!</div>
+      <p class="sub rise d2">좋은 술을 가장 싸게, 동네 매장에서 픽업하세요.</p>
+      <div class="rise d4"><a href="#now" class="btn btn-primary btn-inline">지금 픽업 가능 보기 →</a></div>
+      <div class="foot-row"><span class="scroll-hint">SCROLL<br />▾</span></div>
+    </div>
+  </section>
+
+  <!-- 1) 지금 픽업 가능 — 캐러셀 -->
+  <section class="sec" id="now">
+    <div class="row-head">
+      <div class="t">지금 픽업 가능</div>
+      <a class="more" href="#">전체 →</a>
+    </div>
+    <!-- {{ products.available[] }} → 클릭 시 product.html?ref=... -->
+    <div class="carousel">
+      <a class="prod" href="product.html">
+        <span class="badge">12병 남음</span>
+        <img src="https://cdn.veluga.kr/drinks/pv/31081.png" alt="" />
+        <div class="nm">탐나불린 셰리 캐스크</div>
+        <div class="meta">700mL · 40%</div>
+        <div class="price"><span class="off">19%</span><span class="now">89,000원</span> <span class="was">110,000</span></div>
+      </a>
+      <a class="prod" href="product.html">
+        <span class="badge deal">단독</span>
+        <img src="https://cdn.veluga.kr/drinks/pv/31253.png" alt="" />
+        <div class="nm">탐나불린 더블 캐스크</div>
+        <div class="meta">700mL · 40%</div>
+        <div class="price"><span class="now">59,000원</span></div>
+      </a>
+      <a class="prod" href="product.html">
+        <span class="badge deal">단독</span>
+        <img src="https://cdn.veluga.kr/drinks/pv/31244.png" alt="" />
+        <div class="nm">탐나불린 쇼비뇽 블랑</div>
+        <div class="meta">700mL · 40%</div>
+        <div class="price"><span class="now">72,000원</span></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- 2) 프로모션 중 -->
+  <section class="sec sec--tight">
+    <div class="row-head"><div class="t">프로모션 중</div></div>
+    <!-- {{ products.promo[] }} -->
+    <a class="promo" href="product.html">
+      <img src="https://cdn.veluga.kr/drinks/pv/31081.png" alt="" />
+      <div>
+        <div class="tag">WEEKLY DROP · D-3</div>
+        <div class="tt">위스키한모금 PICK — 셰리 캐스크 30병 한정</div>
+        <div class="ds">콘테스트 4년 연속 골드 · 입문자 추천</div>
+      </div>
+    </a>
+    <a class="promo" href="product.html">
+      <img src="https://cdn.veluga.kr/drinks/30879/pv/main/be6df03a84774220bdb94eac1f7089d5_%E1%84%90%E1%85%A1%E1%86%B7%E1%84%82%E1%85%A1%E1%84%87%E1%85%AE%E1%86%AF%E1%84%85%E1%85%B5%E1%86%AB_%E1%84%8C%E1%85%A5%E1%84%86%E1%85%A5%E1%86%AB_%E1%84%91%E1%85%B5%E1%84%82%E1%85%A9_%E1%84%82%E1%85%AE%E1%84%8B%E1%85%A1.png" alt="" />
+      <div>
+        <div class="tag">LIMITED</div>
+        <div class="tt">저먼 피노 누아 캐스크 — 이번 주 특가</div>
+        <div class="ds">레드와인 캐스크 · 우아한 단맛</div>
+      </div>
+    </a>
+  </section>
+
+  <!-- 픽업 방식 -->
+  <section class="sec sec--parchment" id="pickup">
+    <div class="eyebrow">HOW IT WORKS</div>
+    <div class="h2">3분이면 픽업 완료.</div>
+    <div style="margin-top:8px;">
+      <div class="step"><div class="n">1</div><div><div class="t">온라인 결제</div><div class="d">원하는 보틀을 결제하면 픽업 코드가 발급돼요.</div></div></div>
+      <div class="step"><div class="n">2</div><div><div class="t">가까운 매장 선택</div><div class="d">내 주변 위신싸 픽업 매장 중 편한 곳을 고르세요.</div></div></div>
+      <div class="step"><div class="n">3</div><div><div class="t">방문 픽업</div><div class="d">신분증 확인 후 수령. 배송 기다릴 필요 없어요.</div></div></div>
+    </div>
+  </section>
+
+  <!-- FOOTER (공통) -->
+  <footer class="ft">
+    <div class="fl mark">위신<b>싸</b></div>
+    <div style="margin-bottom:4px;">위스키가 신발보다 싸다 — by 벨루가</div>
+    <span class="age">19+ 청소년 보호</span>
+    <div>주류는 만 19세 이상만 구매·픽업할 수 있습니다.</div>
+    <div style="margin-top:10px;"><b>(주)벨루가</b> · 사업자/통신판매업/주류통신판매 승인 정보 (확정 후 기재)</div>
+  </footer>
+
+</div>
+</body>
+</html>
