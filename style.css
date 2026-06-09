@@ -64,10 +64,13 @@ img{display:block;}
   display:flex;align-items:center;justify-content:space-between;padding:15px 18px;
   background:rgba(255,255,255,.86);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   border-bottom:1px solid var(--hairline);}
-.hdr .logo{font-size:21px;color:var(--ink);}
-.nav{display:flex;gap:18px;font-size:14px;font-weight:600;letter-spacing:-0.01em;color:var(--ink-48);}
+.hdr .logo{font-size:20px;color:var(--ink);flex:0 0 auto;}
+.nav{display:flex;align-items:center;gap:14px;font-size:13.5px;font-weight:600;letter-spacing:-0.02em;color:var(--ink-48);white-space:nowrap;flex-shrink:0;}
 .nav a{transition:color .14s;}
 .nav a:hover{color:var(--brand);}
+.nav .ico{display:inline-flex;align-items:center;color:var(--ink);}
+.nav .ico:hover{color:var(--brand);}
+.nav .ico svg{display:block;}
 
 /* ---------- 히어로 (공통 베이스 + 라이트/다크 모디파이어) ---------- */
 .hero{position:relative;overflow:hidden;}
@@ -318,3 +321,40 @@ img{display:block;}
 .reviews .rv{border:1px solid var(--hairline);border-radius:14px;padding:15px 16px;font-size:14px;line-height:1.62;color:var(--ink-80);letter-spacing:-0.01em;margin-bottom:10px;}
 .reviews .rv:last-child{margin-bottom:0;}
 .reviews .rv b{color:var(--ink);}
+
+/* ===========================================================
+   마이페이지(프로필) + 가입
+   =========================================================== */
+.prof{display:flex;align-items:center;gap:15px;padding:28px var(--pad) 22px;}
+.prof .avt{width:58px;height:58px;border-radius:50%;background:var(--forest);color:#fff;display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:700;flex:0 0 auto;}
+.prof .nm{font-size:19px;font-weight:700;letter-spacing:-0.03em;color:var(--ink);}
+.prof .sub{font-size:13px;color:var(--ink-48);margin-top:3px;letter-spacing:-0.01em;}
+.waitcard{display:flex;gap:13px;align-items:center;border:1px solid var(--hairline);border-radius:var(--r);padding:15px;}
+.waitcard img{width:38px;height:58px;object-fit:contain;flex:0 0 auto;}
+.waitcard .t{font-size:14.5px;font-weight:700;letter-spacing:-0.02em;color:var(--ink);}
+.waitcard .d{font-size:12.5px;color:var(--ink-48);margin-top:3px;letter-spacing:-0.01em;}
+.waitcard .code{margin-left:auto;text-align:right;flex:0 0 auto;}
+.waitcard .code .lbl{font-size:10.5px;color:var(--ink-48);}
+.waitcard .code .v{font-size:15px;font-weight:800;color:var(--brand);letter-spacing:.06em;}
+.mrow{display:flex;align-items:center;justify-content:space-between;padding:17px 0;border-bottom:1px solid var(--hairline);font-size:15px;font-weight:600;letter-spacing:-0.02em;color:var(--ink);}
+.mrow:last-child{border-bottom:none;}
+.mrow .r{display:flex;align-items:center;gap:8px;color:var(--ink-48);font-weight:500;font-size:13.5px;}
+.mrow .r::after{content:'›';color:#c4cad2;font-size:17px;}
+/* 가입 폼 */
+.field{margin-bottom:16px;}
+.field > label{display:block;font-size:13px;font-weight:700;color:var(--ink);margin-bottom:7px;letter-spacing:-0.01em;}
+.field .inp{width:100%;border:1px solid var(--hairline);border-radius:12px;padding:14px 15px;font-size:15px;font-family:var(--font);letter-spacing:-0.01em;color:var(--ink);background:var(--canvas);}
+.field .inp:focus{outline:none;border-color:var(--brand);}
+.field .row{display:flex;gap:9px;}
+.field .row .inp{flex:1;}
+.field .row button{flex:0 0 auto;background:var(--ink);color:#fff;border:none;border-radius:12px;padding:0 16px;font-weight:700;font-size:13.5px;font-family:var(--font);cursor:pointer;}
+.join-agree{margin:4px 0 22px;border-top:1px solid var(--hairline);padding-top:8px;}
+.join-agree label{display:flex;align-items:center;gap:10px;padding:9px 0;font-size:13.5px;color:var(--ink-80);letter-spacing:-0.01em;cursor:pointer;}
+.join-agree label.all{font-weight:700;color:var(--ink);border-bottom:1px solid var(--hairline);}
+.join-agree input{width:19px;height:19px;accent-color:var(--brand);}
+/* 가입 유도 배너 (다크) */
+.joinband{background:var(--forest);color:#fff;border-radius:var(--r);padding:26px 22px;text-align:center;}
+.joinband .jt{font-size:20px;font-weight:700;letter-spacing:-0.03em;line-height:1.32;margin-bottom:8px;}
+.joinband .jt b{color:var(--amber);}
+.joinband .jd{font-size:14px;color:rgba(255,255,255,.72);line-height:1.6;margin-bottom:18px;letter-spacing:-0.01em;}
+.joinband .btn{background:#fff;color:var(--forest);}

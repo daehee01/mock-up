@@ -9,6 +9,7 @@ import os, json
 from urllib.parse import quote
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
+VERSION = "4"  # style.css 캐시버스팅 — 디자인 변경 시 +1
 
 # 탐나불린 공통 정보 (브랜드 단위 — 캐스크별 제품이 공유)
 SHARED = {
@@ -123,6 +124,7 @@ def header(base):
       <a href="{base}products.html">전체상품</a>
       <a href="{base}events/0001/">프로모션관</a>
       <a href="{base}about.html">About</a>
+      <a class="ico" href="{base}mypage.html" aria-label="마이페이지"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></a>
     </nav>
   </header>'''
 
@@ -169,7 +171,7 @@ def page(title, body, base=""):
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>{title}</title>
 {FONT}
-<link rel="stylesheet" href="{base}style.css" />
+<link rel="stylesheet" href="{base}style.css?v={VERSION}" />
 </head>
 <body>
 <div class="wrap">

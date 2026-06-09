@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>위신싸 — 회원가입</title>
+<!-- 위신싸 회원가입(일반 소비자) — 목업. 가입 처리는 데모. -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="stylesheet" as="style" crossorigin
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<link rel="stylesheet" href="style.css?v=4" />
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hdr">
+    <a href="index.html" class="logo mark">위신<b>싸</b></a>
+    <nav class="nav">
+      <a href="products.html">전체상품</a>
+      <a href="events/0001/">프로모션관</a>
+      <a href="about.html">About</a>
+      <a class="ico" href="mypage.html" aria-label="마이페이지"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></a>
+    </nav>
+  </header>
+
+  <section class="sec">
+    <div class="eyebrow eyebrow--amber">JOIN</div>
+    <div class="h2">위신싸 가입하기</div>
+    <p class="lead" style="margin-bottom:26px;">30초면 끝. 가입하고 한정 보틀 픽업과 첫 구매 혜택을 받아보세요.</p>
+
+    <div class="field">
+      <label>이름</label>
+      <input class="inp" type="text" placeholder="이름을 입력하세요" />
+    </div>
+    <div class="field">
+      <label>휴대폰 번호</label>
+      <div class="row">
+        <input class="inp" type="tel" inputmode="numeric" placeholder="010-0000-0000" />
+        <button onclick="alert('인증번호를 전송했어요. (데모)')">인증요청</button>
+      </div>
+    </div>
+    <div class="field">
+      <label>인증번호</label>
+      <div class="row">
+        <input class="inp" type="text" inputmode="numeric" placeholder="6자리 입력" />
+        <button onclick="alert('인증되었어요. (데모)')">확인</button>
+      </div>
+    </div>
+
+    <div class="join-agree">
+      <label class="all"><input type="checkbox" id="agreeAll" /><span>전체 동의하기</span></label>
+      <label><input type="checkbox" class="agsub" /><span>(필수) 만 19세 이상이며 본인이 픽업합니다</span></label>
+      <label><input type="checkbox" class="agsub" /><span>(필수) 이용약관 및 개인정보 처리 동의</span></label>
+      <label><input type="checkbox" class="agsub" /><span>(선택) 한정 드롭 · 혜택 알림 수신</span></label>
+    </div>
+
+    <a href="#" class="btn btn-primary" onclick="joinDemo();return false;">가입하기</a>
+  </section>
+
+  <footer class="ft">
+    <div class="fl mark">위신<b>싸</b></div>
+    <div style="margin-bottom:4px;">위스키가 신발보다 싸다 — by 벨루가</div>
+    <span class="age">19+ 청소년 보호</span>
+    <div>주류는 만 19세 이상만 구매·픽업할 수 있습니다.</div>
+    <div style="margin-top:10px;"><b>(주)벨루가</b> · 사업자/통신판매업/주류통신판매 승인 정보 (확정 후 기재)</div>
+  </footer>
+
+</div>
+
+<script>
+  document.addEventListener('change', function(e){
+    if(e.target.id==='agreeAll'){ document.querySelectorAll('.agsub').forEach(function(c){c.checked=e.target.checked;}); }
+    if(e.target.classList.contains('agsub')){
+      var all=document.querySelectorAll('.agsub'),on=document.querySelectorAll('.agsub:checked');
+      document.getElementById('agreeAll').checked=all.length===on.length;
+    }
+  });
+  function joinDemo(){ alert('가입 완료! (데모) 마이페이지로 이동합니다.'); location.href='mypage.html'; }
+</script>
+</body>
+</html>
