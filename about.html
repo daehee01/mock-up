@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>위신싸 — 위스키가 왜 신발보다 싼가</title>
+<title>위신싸 — 여기에서만 만나는 술</title>
 <!--
-  위신싸 About (ops-b2c) — 브랜드 소개. 무엇인지·왜 싼지·픽업 방식·정품/신뢰
-  디자인: ops-sales 덱 언어. 다크 포레스트 히어로(덱 커버 스타일). DESIGN.md 준수.
+  위신싸 About (ops-b2c) — 소비자향 브랜드 소개.
+  핵심: 한정판·단독·고연산을 "여기에서만" 합리적인 가격에. (B2B 도매망/지표는 비노출)
+  디자인: ops-sales 덱 언어. 다크 포레스트 히어로. CTA → 프로모션관(events/0001).
 -->
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <link rel="stylesheet" href="style.css" />
 <style>
-  /* About 전용 */
   .hero-about{padding:72px var(--pad);text-align:center;min-height:72vh;display:flex;flex-direction:column;justify-content:center;}
   .hero-about .mark{font-size:clamp(78px,27vw,132px);}
   .hero-about .pun{font-size:17px;color:rgba(255,255,255,.8);margin-top:20px;line-height:1.72;letter-spacing:-0.015em;}
@@ -23,11 +23,7 @@
   .why .ic{flex:0 0 42px;height:42px;border-radius:12px;background:var(--parchment);display:flex;align-items:center;justify-content:center;font-size:20px;}
   .why .t{font-size:16px;font-weight:700;letter-spacing:-0.02em;color:var(--ink);}
   .why .d{font-size:14px;color:var(--ink-80);margin-top:4px;line-height:1.62;letter-spacing:-0.015em;}
-  .stats{display:flex;gap:12px;}
-  .stat{flex:1;border:1px solid var(--hairline);border-radius:var(--r);padding:24px 14px;text-align:center;}
-  .stat .v{font-size:30px;font-weight:700;letter-spacing:-0.035em;color:var(--brand);}
-  .stat .v b{color:var(--amber);}
-  .stat .l{font-size:12.5px;color:var(--ink-48);margin-top:6px;letter-spacing:-0.01em;}
+  .only b{color:var(--ink);}
 </style>
 </head>
 <body>
@@ -37,7 +33,7 @@
   <header class="hdr">
     <a href="index.html" class="logo mark">위신<b>싸</b></a>
     <nav class="nav">
-      <a href="index.html">전체상품</a>
+      <a href="products.html">전체상품</a>
       <a href="about.html">About</a>
     </nav>
   </header>
@@ -46,33 +42,23 @@
   <section class="hero hero--dark hero-about">
     <div class="inner">
       <div class="mark rise d1">위신<b>싸</b></div>
-      <div class="pun rise d2">앗! <em>위</em>스키가 <em>신</em>발보다 <em>싸</em>다!<br />좋은 술을 가장 싸게, 동네에서 픽업하는 법.</div>
+      <div class="pun rise d2">앗! <em>위</em>스키가 <em>신</em>발보다 <em>싸</em>다!<br />여기에서만 만나는 한정 보틀.</div>
     </div>
   </section>
 
-  <!-- 위신싸란 -->
+  <!-- 여기에서만 -->
   <section class="sec">
-    <div class="eyebrow">WHAT IS 위신싸</div>
-    <div class="h2">전국 도매망을 가진 벨루가가<br />소비자에게 직접 엽니다.</div>
-    <p class="lead">위신싸는 주류 B2B 플랫폼 <b style="color:var(--ink);">벨루가</b>가 만든 소비자 브랜드입니다. 전국 13,000개 매장과 23,000여 종 주류를 다루는 도매 인프라를 그대로 소비자에게 연결해, 한정 보틀부터 매주 바뀌는 프로모션까지 <b style="color:var(--ink);">가장 합리적인 가격에 동네 매장 픽업</b>으로 제공합니다.</p>
+    <div class="eyebrow eyebrow--amber">ONLY HERE</div>
+    <div class="h2">어디서도 못 구하던 술,<br />여기엔 있어요.</div>
+    <p class="lead only">한정판, 단독 입점, 고연산 — 평소 <b>발품 팔아도 구하기 어렵던 보틀</b>을 위신싸에서 <b>단독으로, 그리고 더 싸게</b> 만나보세요. 그리고 동네 매장에서 바로 픽업.</p>
   </section>
 
-  <!-- 왜 싼가 -->
+  <!-- 무엇을 -->
   <section class="sec sec--tight">
-    <div class="eyebrow">WHY SO CHEAP</div>
-    <div class="h2">위스키가 왜 신발보다 쌀까요?</div>
     <div style="margin-top:6px;">
-      <div class="why"><div class="ic">🏭</div><div><div class="t">도매 공급망 직결</div><div class="d">수입사·제조사와 바로 연결된 벨루가 공급망에서 소싱합니다. 중간 유통 단계를 걷어냅니다.</div></div></div>
-      <div class="why"><div class="ic">🤖</div><div><div class="t">운영비 거의 제로</div><div class="d">영업사원 없이 데이터·자동화로 굴러갑니다. 아낀 비용을 가격으로 돌려드립니다.</div></div></div>
-      <div class="why"><div class="ic">🏪</div><div><div class="t">매장이 곧 픽업 거점</div><div class="d">물류창고·배송비 대신, 이미 있는 동네 매장에서 픽업. 그만큼 더 쌉니다.</div></div></div>
-    </div>
-  </section>
-
-  <!-- 인프라 스탯 -->
-  <section class="sec sec--tight">
-    <div class="stats">
-      <div class="stat"><div class="v">13,000<b>+</b></div><div class="l">전국 거래 매장</div></div>
-      <div class="stat"><div class="v">23,000<b>+</b></div><div class="l">취급 주류 SKU</div></div>
+      <div class="why"><div class="ic">🏆</div><div><div class="t">한정판 드롭</div><div class="d">인플루언서가 고른 한정 보틀. 정해진 수량이 풀리면 그대로 끝납니다.</div></div></div>
+      <div class="why"><div class="ic">💎</div><div><div class="t">단독 입점</div><div class="d">다른 데선 잘 안 풀리는, 위신싸에서만 만나는 보틀.</div></div></div>
+      <div class="why"><div class="ic">🥃</div><div><div class="t">고연산 · 레어</div><div class="d">발품 팔아도 구하기 힘들던 희귀·고연산 보틀을, 합리적인 가격에.</div></div></div>
     </div>
   </section>
 
@@ -95,9 +81,9 @@
     <p class="lead">위신싸의 모든 보틀은 정식 수입·유통 경로를 거친 <b style="color:var(--ink);">100% 정품</b>입니다. 결제·픽업 전 과정에서 만 19세 이상 성인인증을 거치며, 미성년자에게는 판매하지 않습니다.</p>
   </section>
 
-  <!-- CTA -->
+  <!-- CTA → 프로모션관 -->
   <section class="sec sec--tight">
-    <a href="index.html" class="btn btn-primary">지금 픽업 가능 상품 보기 →</a>
+    <a href="events/0001/" class="btn btn-primary">이번 주 프로모션 보러 가기 →</a>
   </section>
 
   <!-- FOOTER (공통) -->

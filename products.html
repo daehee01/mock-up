@@ -4,40 +4,12 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>위신싸 — 전체 상품</title>
-<!--
-  위신싸 전체 상품 목록 + 검색 (ops-b2c) — "전체" 클릭 시 도착지
-  디자인: ops-sales 덱 언어. 검색은 클라이언트 사이드 필터(목업). 클릭 → product.html
-  상품 데이터는 {{ products[] }} 주석, 샘플 렌더.
--->
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-<link rel="stylesheet" as="style" crossorigin
-  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <link rel="stylesheet" href="style.css" />
-<style>
-  /* 전체 상품 전용 */
-  .ptop{padding:26px var(--pad) 0;}
-  .ptop h1{font-size:30px;font-weight:700;letter-spacing:-0.035em;color:var(--ink);margin-bottom:4px;}
-  .ptop .cnt{font-size:14px;color:var(--ink-48);letter-spacing:-0.01em;}
-  /* 검색 — 헤더 아래 sticky */
-  .searchbar{position:sticky;top:57px;z-index:30;background:rgba(255,255,255,.92);
-    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:16px var(--pad);}
-  .searchbox{display:flex;align-items:center;gap:10px;border:1px solid var(--hairline);border-radius:13px;
-    padding:13px 15px;background:var(--canvas);transition:border-color .15s;}
-  .searchbox:focus-within{border-color:var(--brand);}
-  .searchbox svg{flex:0 0 auto;}
-  .searchbox input{flex:1;border:none;outline:none;font-size:15.5px;font-family:var(--font);
-    letter-spacing:-0.015em;color:var(--ink);background:transparent;}
-  .searchbox input::placeholder{color:var(--ink-48);}
-  /* 그리드 */
-  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px;padding:8px var(--pad) 48px;}
-  .grid .prod{flex:initial;width:auto;}
-  .empty{display:none;text-align:center;color:var(--ink-48);font-size:15px;letter-spacing:-0.01em;padding:48px 0 60px;}
-</style>
 </head>
 <body>
 <div class="wrap">
-
-  <!-- HEADER (공통) -->
   <header class="hdr">
     <a href="index.html" class="logo mark">위신<b>싸</b></a>
     <nav class="nav">
@@ -46,13 +18,11 @@
     </nav>
   </header>
 
-  <!-- 타이틀 -->
   <div class="ptop">
     <h1>전체 상품</h1>
     <div class="cnt"><span id="count">8</span>개 상품 · 지금 픽업 가능</div>
   </div>
 
-  <!-- 검색 -->
   <div class="searchbar">
     <div class="searchbox">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7a7a7a" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
@@ -60,67 +30,66 @@
     </div>
   </div>
 
-  <!-- 상품 그리드 — {{ products[] }} (data-name으로 검색) -->
   <div class="grid" id="grid">
-    <a class="prod" href="product.html" data-name="탐나불린 셰리 캐스크 스페이사이드 싱글몰트">
-      <span class="badge">12병 남음</span>
-      <img src="https://cdn.veluga.kr/drinks/pv/31081.png" alt="" />
-      <div class="nm">탐나불린 셰리 캐스크</div>
-      <div class="meta">700mL · 40%</div>
-      <div class="price"><span class="off">19%</span><span class="now">89,000원</span> <span class="was">110,000</span></div>
-    </a>
-    <a class="prod" href="product.html" data-name="탐나불린 더블 캐스크 스페이사이드 싱글몰트">
-      <span class="badge deal">단독</span>
-      <img src="https://cdn.veluga.kr/drinks/pv/31253.png" alt="" />
-      <div class="nm">탐나불린 더블 캐스크</div>
-      <div class="meta">700mL · 40%</div>
-      <div class="price"><span class="now">59,000원</span></div>
-    </a>
-    <a class="prod" href="product.html" data-name="탐나불린 쇼비뇽 블랑 캐스크 화이트와인">
-      <span class="badge deal">단독</span>
-      <img src="https://cdn.veluga.kr/drinks/pv/31244.png" alt="" />
-      <div class="nm">탐나불린 쇼비뇽 블랑</div>
-      <div class="meta">700mL · 40%</div>
-      <div class="price"><span class="now">72,000원</span></div>
-    </a>
-    <a class="prod" href="product.html" data-name="탐나불린 저먼 피노 누아 캐스크 레드와인">
-      <span class="badge">한정</span>
-      <img src="https://cdn.veluga.kr/drinks/30879/pv/main/be6df03a84774220bdb94eac1f7089d5_%E1%84%90%E1%85%A1%E1%86%B7%E1%84%82%E1%85%A1%E1%84%87%E1%85%AE%E1%86%AF%E1%84%85%E1%85%B5%E1%86%AB_%E1%84%8C%E1%85%A5%E1%84%86%E1%85%A5%E1%86%AB_%E1%84%91%E1%85%B5%E1%84%82%E1%85%A9_%E1%84%82%E1%85%AE%E1%84%8B%E1%85%A1.png" alt="" />
-      <div class="nm">탐나불린 피노 누아</div>
-      <div class="meta">700mL · 40%</div>
-      <div class="price"><span class="now">94,000원</span></div>
-    </a>
-    <a class="prod" href="product.html" data-name="탐나불린 셰리 캐스크 미니어처 200ml">
-      <img src="https://cdn.veluga.kr/drinks/pv/31081.png" alt="" />
-      <div class="nm">탐나불린 셰리 200mL</div>
-      <div class="meta">200mL · 40%</div>
-      <div class="price"><span class="now">29,000원</span></div>
-    </a>
-    <a class="prod" href="product.html" data-name="탐나불린 더블 캐스크 기프트 세트 선물">
-      <span class="badge deal">선물</span>
-      <img src="https://cdn.veluga.kr/drinks/pv/31253.png" alt="" />
-      <div class="nm">탐나불린 기프트 세트</div>
-      <div class="meta">700mL + 전용잔</div>
-      <div class="price"><span class="now">69,000원</span></div>
-    </a>
-    <a class="prod" href="product.html" data-name="탐나불린 쇼비뇽 블랑 하이볼 패키지 분다버그">
-      <span class="badge">여름</span>
-      <img src="https://cdn.veluga.kr/drinks/pv/31244.png" alt="" />
-      <div class="nm">쇼비뇽 블랑 하이볼팩</div>
-      <div class="meta">700mL + 토닉</div>
-      <div class="price"><span class="now">79,000원</span></div>
-    </a>
-    <a class="prod" href="product.html" data-name="탐나불린 셰리 캐스크 더블 테이스팅 세트">
-      <span class="badge deal">테이스팅</span>
-      <img src="https://cdn.veluga.kr/drinks/pv/31081.png" alt="" />
-      <div class="nm">셰리·더블 2종 세트</div>
-      <div class="meta">700mL x 2</div>
-      <div class="price"><span class="now">139,000원</span></div>
-    </a>
+      <a class="prod" href="product/0001/" data-name="탐나불린 셰리 캐스크 스페이사이드 싱글몰트 한정">
+        <span class="badge">12병 남음</span>
+        <img src="https://cdn.veluga.kr/drinks/pv/31081.png" alt="" />
+        <div class="nm">탐나불린 셰리 캐스크</div>
+        <div class="meta">700mL · 40%</div>
+        <div class="price"><span class="off">19%</span><span class="now">89,000원</span> <span class="was">110,000</span></div>
+      </a>
+      <a class="prod" href="product/0002/" data-name="탐나불린 더블 캐스크 스페이사이드 싱글몰트 단독">
+        <span class="badge deal">단독</span>
+        <img src="https://cdn.veluga.kr/drinks/pv/31253.png" alt="" />
+        <div class="nm">탐나불린 더블 캐스크</div>
+        <div class="meta">700mL · 40%</div>
+        <div class="price"><span class="now">59,000원</span></div>
+      </a>
+      <a class="prod" href="product/0003/" data-name="탐나불린 쇼비뇽 블랑 캐스크 화이트와인 여름">
+        <span class="badge">여름</span>
+        <img src="https://cdn.veluga.kr/drinks/pv/31244.png" alt="" />
+        <div class="nm">탐나불린 쇼비뇽 블랑</div>
+        <div class="meta">700mL · 40%</div>
+        <div class="price"><span class="now">72,000원</span></div>
+      </a>
+      <a class="prod" href="product/0004/" data-name="탐나불린 저먼 피노 누아 캐스크 레드와인 한정 레어">
+        <span class="badge">한정</span>
+        <img src="https://cdn.veluga.kr/drinks/30879/pv/main/be6df03a84774220bdb94eac1f7089d5_%E1%84%90%E1%85%A1%E1%86%B7%E1%84%82%E1%85%A1%E1%84%87%E1%85%AE%E1%86%AF%E1%84%85%E1%85%B5%E1%86%AB_%E1%84%8C%E1%85%A5%E1%84%86%E1%85%A5%E1%86%AB_%E1%84%91%E1%85%B5%E1%84%82%E1%85%A9_%E1%84%82%E1%85%AE%E1%84%8B%E1%85%A1.png" alt="" />
+        <div class="nm">탐나불린 피노 누아</div>
+        <div class="meta">700mL · 40%</div>
+        <div class="price"><span class="now">94,000원</span></div>
+      </a>
+      <a class="prod" href="product/0005/" data-name="탐나불린 셰리 캐스크 미니어처 200ml 입문">
+        
+        <img src="https://cdn.veluga.kr/drinks/pv/31081.png" alt="" />
+        <div class="nm">탐나불린 셰리 200mL</div>
+        <div class="meta">200mL · 40%</div>
+        <div class="price"><span class="now">29,000원</span></div>
+      </a>
+      <a class="prod" href="product/0006/" data-name="탐나불린 더블 캐스크 기프트 세트 선물 전용잔">
+        <span class="badge deal">선물</span>
+        <img src="https://cdn.veluga.kr/drinks/pv/31253.png" alt="" />
+        <div class="nm">탐나불린 기프트 세트</div>
+        <div class="meta">700mL + 전용잔 · 40%</div>
+        <div class="price"><span class="now">69,000원</span></div>
+      </a>
+      <a class="prod" href="product/0007/" data-name="탐나불린 쇼비뇽 블랑 하이볼 패키지 토닉 분다버그 여름">
+        <span class="badge">여름</span>
+        <img src="https://cdn.veluga.kr/drinks/pv/31244.png" alt="" />
+        <div class="nm">쇼비뇽 블랑 하이볼팩</div>
+        <div class="meta">700mL + 토닉 · 40%</div>
+        <div class="price"><span class="now">79,000원</span></div>
+      </a>
+      <a class="prod" href="product/0008/" data-name="탐나불린 셰리 더블 캐스크 2종 테이스팅 세트 비교">
+        <span class="badge deal">테이스팅</span>
+        <img src="https://cdn.veluga.kr/drinks/pv/31081.png" alt="" />
+        <div class="nm">셰리·더블 2종 세트</div>
+        <div class="meta">700mL x 2 · 40%</div>
+        <div class="price"><span class="now">139,000원</span></div>
+      </a>
   </div>
   <div class="empty" id="empty">검색 결과가 없어요.</div>
 
-  <!-- FOOTER (공통) -->
   <footer class="ft">
     <div class="fl mark">위신<b>싸</b></div>
     <div style="margin-bottom:4px;">위스키가 신발보다 싸다 — by 벨루가</div>
@@ -129,27 +98,19 @@
     <div style="margin-top:10px;"><b>(주)벨루가</b> · 사업자/통신판매업/주류통신판매 승인 정보 (확정 후 기재)</div>
   </footer>
 
-</div>
-
-<script>
-  // 상품 검색 — 클라이언트 사이드 필터 (목업)
-  var q = document.getElementById('q');
-  var cards = Array.prototype.slice.call(document.querySelectorAll('#grid .prod'));
-  var countEl = document.getElementById('count');
-  var emptyEl = document.getElementById('empty');
-  function norm(s){ return (s || '').toLowerCase().replace(/\s+/g,''); }
-  q.addEventListener('input', function(){
-    var term = norm(q.value);
-    var shown = 0;
-    cards.forEach(function(c){
-      var hay = norm(c.getAttribute('data-name') + ' ' + c.querySelector('.nm').textContent);
-      var match = term === '' || hay.indexOf(term) !== -1;
-      c.style.display = match ? '' : 'none';
-      if (match) shown++;
+  <script>
+    var q=document.getElementById('q'),cards=[].slice.call(document.querySelectorAll('#grid .prod')),
+        countEl=document.getElementById('count'),emptyEl=document.getElementById('empty');
+    function norm(s){return (s||'').toLowerCase().replace(/\s+/g,'');}
+    q.addEventListener('input',function(){
+      var t=norm(q.value),n=0;
+      cards.forEach(function(c){
+        var hay=norm(c.getAttribute('data-name')+' '+c.querySelector('.nm').textContent);
+        var m=t===''||hay.indexOf(t)!==-1; c.style.display=m?'':'none'; if(m)n++;
+      });
+      countEl.textContent=n; emptyEl.style.display=n===0?'block':'none';
     });
-    countEl.textContent = shown;
-    emptyEl.style.display = shown === 0 ? 'block' : 'none';
-  });
-</script>
+  </script>
+</div>
 </body>
 </html>
