@@ -6,8 +6,43 @@
 #   events/<code>/index.html    프로모션관
 # index.html / about.html 은 수기 유지 (브랜드 페이지).
 import os, json
+from urllib.parse import quote
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
+
+# 탐나불린 공통 정보 (브랜드 단위 — 캐스크별 제품이 공유)
+SHARED = {
+    "region": "스페이사이드, 스코틀랜드",
+    "producer": "Whyte & Mackay",
+    "flag": "🥃",
+    "foods": [("🧀", "숙성 치즈 · 견과"), ("🦪", "차가운 해산물"), ("🍫", "다크 초콜릿")],
+    "pron_ko": "탐나불린", "pron_ipa": "tæmnəˈvuːlɪn",
+    "quote": "게일어로 ‘언덕 위의 방앗간’.",
+    "story": [
+        "스코틀랜드 스페이사이드의 탐나불린 증류소는 <b>부드럽고 달콤한 싱글몰트</b> 스타일로 알려져 있습니다. 위스키를 처음 접하는 분도 편하게 즐길 수 있는 접근성이 강점입니다.",
+        "같은 원액에서도 셰리 · 쇼비뇽 블랑 · 피노 누아 등 <b>캐스크 피니시</b>에 따라 전혀 다른 개성을 끌어냅니다. 한 브랜드 안에서 취향대로 고르는 재미가 있습니다.",
+        "그중 셰리 캐스크는 글로벌 위스키 콘테스트에서 <b>4년 연속 골드 메달</b>을 받으며 품질을 인정받았습니다.",
+    ],
+    "strengths": [
+        "글로벌 콘테스트 4년 연속 골드 — 검증된 품질",
+        "달콤하고 부드러워 위스키 입문자도 부담 없이",
+        "셰리 · 쇼비뇽 블랑 · 피노 누아 등 캐스크별 개성",
+    ],
+    "reviews": [
+        "<b>입문용으로 강추.</b> 셰리 특유의 단맛이 부담스럽지 않고 깔끔해서 위스키 처음인 친구도 잘 마셨어요.",
+        "하이볼로 말면 청량하고, 니트로 마시면 토피·견과 풍미가 살아나요. <b>가성비가 미쳤다.</b>",
+        "선물했더니 라벨이 예쁘다고 좋아하더라고요. 맛도 무난해서 <b>실패 없는 선택.</b>",
+    ],
+}
+
+# 제품별 ChatGPT 요약(캐스크별)
+SUMMARIES = {
+    "0001": "탐나불린은 스코틀랜드 스페이사이드의 싱글몰트예요. <b>부드럽고 달콤한 스타일</b>이라 위스키가 처음인 분도 거부감 없이 즐깁니다. 그중 셰리 캐스크는 <b>글로벌 콘테스트 4년 연속 골드</b>를 받은 탐나불린의 얼굴이에요.",
+    "0002": "두 가지 캐스크의 균형감이 특징인 공식 라인업의 첫 위스키예요. <b>가성비·가심비</b>를 모두 잡아, 데일리로 부담 없이 즐기기 좋습니다.",
+    "0003": "화이트와인(쇼비뇽 블랑) 캐스크로 마무리한 <b>여름용 싱글몰트</b>예요. 칠링하거나 하이볼로 즐기면 청량감이 한층 살아납니다.",
+    "0004": "레드와인(피노 누아) 캐스크로 마무리한 <b>레어 보틀</b>이에요. 진한 로즈우드 컬러와 우아한 단맛이 매력입니다.",
+}
+DEFAULT_SUMMARY = SUMMARIES["0001"]
 FONT = ('<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />\n'
         '<link rel="stylesheet" as="style" crossorigin '
         'href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />')
@@ -86,6 +121,7 @@ def header(base):
     <a href="{base}index.html" class="logo mark">위신<b>싸</b></a>
     <nav class="nav">
       <a href="{base}products.html">전체상품</a>
+      <a href="{base}events/0001/">프로모션관</a>
       <a href="{base}about.html">About</a>
     </nav>
   </header>'''
@@ -189,6 +225,11 @@ PAY_SCRIPT = '''  <script>
     function openPay(){ document.getElementById('payModal').classList.add('open'); document.body.style.overflow='hidden'; }
     function closePay(){ document.getElementById('payModal').classList.remove('open'); document.body.style.overflow=''; }
     function payDemo(){ alert('결제는 데모입니다. 실제 연동 시 토스페이먼츠 결제위젯 SDK로 대체됩니다.'); closePay(); }
+    function naverSearch(){
+      var v=(document.getElementById('storeq').value||'').trim();
+      var q=encodeURIComponent((v?v+' ':'')+'위신싸 픽업 주류');
+      window.open('https://map.naver.com/p/search/'+q,'_blank');
+    }
     document.addEventListener('change',function(e){
       if(e.target.id==='agreeAll'){ document.querySelectorAll('.agsub').forEach(function(c){c.checked=e.target.checked;}); }
       if(e.target.classList.contains('agsub')){
@@ -255,24 +296,50 @@ def build_product(p):
       </div>
     </div>
   </section>'''
-    why_pad = "" if inf else ' style="padding-top:40px;"'
     others = [q for q in PRODUCTS if q["code"] != p["code"]][:4]
     cross = "\n".join(card(q, base) for q in others)
+    foods_html = "".join(f'<div class="food"><div class="ic">{i}</div><div class="t">{t}</div></div>' for i, t in SHARED["foods"])
+    story_html = "".join(f"<p>{para}</p>" for para in SHARED["story"])
+    strengths_html = "".join(f'<div class="st"><span class="chk">✔</span><span>{s}</span></div>' for s in SHARED["strengths"])
+    reviews_html = "\n    ".join(f'<div class="rv">{r}</div>' for r in SHARED["reviews"])
+    summary = SUMMARIES.get(p["code"], DEFAULT_SUMMARY)
+    stores = [("강남점", "서울 강남구 테헤란로 ··", "0.4km"),
+              ("역삼점", "서울 강남구 논현로 ··", "0.9km"),
+              ("선릉점", "서울 강남구 선릉로 ··", "1.3km")]
+    stores_html = "\n    ".join(
+        f'<a class="store" href="https://map.naver.com/p/search/{quote("위신싸 픽업 " + nm)}" target="_blank" rel="noopener">'
+        f'<div><div class="nm">위신싸 픽업 · {nm}</div><div class="ad">{ad}</div></div><div class="dist">{d} ›</div></a>'
+        for nm, ad, d in stores)
     body = f'''{header(base)}
 
-  <!-- 대표 이미지 (히어로 없음) -->
+  <!-- 대표 이미지 (히어로 없음 / 이미지 하단 구매버튼 없음) -->
   <section class="pdp-media"><img src="{p['img']}" alt="{p['name']}" /></section>
   <section class="pdp-info">
     <div class="pdp-kicker">{p['kicker']}</div>
     <h1 class="pdp-name">{p['name']}</h1>
     <div class="pdp-price">{price_html(p)}</div>
-    <a href="#" class="btn btn-primary" onclick="openPay();return false;">지금 구매하기 →</a>
   </section>
 {statbar}
 {inf}
 
-  <section class="sec sec--tight"{why_pad}>
-    <div class="eyebrow">WHY THIS BOTTLE</div>
+  <!-- 원산지 + ChatGPT 요약 -->
+  <section class="sec sec--tight" style="padding-top:38px;">
+    <div class="origin">
+      <div>
+        <div class="o"><span>🏞️</span><span>{SHARED['region']}</span></div>
+        <div class="o"><span>🏛️</span><span>{SHARED['producer']}</span></div>
+      </div>
+      <div class="flag">{SHARED['flag']}</div>
+    </div>
+    <div class="gpt">
+      <div class="gh"><span class="ico">🤖</span><span>ChatGPT로 요약했어요!</span></div>
+      <div class="gt">{summary}</div>
+    </div>
+  </section>
+
+  <!-- 테이스팅 노트 -->
+  <section class="sec sec--tight">
+    <div class="eyebrow">TASTING NOTES</div>
     <p class="lead">{p['why']}</p>
     <div class="chips">
       <span class="chip">싱글몰트 스카치</span>
@@ -286,6 +353,28 @@ def build_product(p):
     </div>
   </section>
 
+  <!-- 잘 어울리는 안주 -->
+  <section class="sec sec--tight">
+    <div class="h2" style="font-size:21px;">잘 어울리는 안주</div>
+    <div class="foods">{foods_html}</div>
+  </section>
+
+  <!-- 브랜드 스토리 -->
+  <section class="sec sec--parchment">
+    <div class="eyebrow">THE STORY</div>
+    <div class="pron">{SHARED['pron_ko']} <span class="ipa">: [ {SHARED['pron_ipa']} ]</span></div>
+    <div class="quote">“{SHARED['quote']}”</div>
+    <div class="story">{story_html}</div>
+  </section>
+
+  <!-- 이 위스키의 강점 -->
+  <section class="sec sec--tight" style="padding-top:38px;">
+    <div class="eyebrow">WHY TAMNAVULIN</div>
+    <div class="h2" style="font-size:21px;margin-bottom:14px;">홈바·여름 메뉴에 두기 좋은 이유</div>
+    <div class="strengths">{strengths_html}</div>
+  </section>
+
+  <!-- 픽업 3단계 -->
   <section class="sec sec--parchment">
     <div class="eyebrow">HOW IT WORKS</div>
     <div class="h2">집 근처에서 3분이면 픽업.</div>
@@ -297,19 +386,19 @@ def build_product(p):
     <div class="law" style="margin-top:18px;">📌 <b>왜 배송이 아니라 픽업인가요?</b> 주류는 법적으로 온라인 배송이 불가합니다(전통주 제외). 온라인 결제 후 매장에서 받는 <b>스마트오더</b>가 합법적인 유일한 방법이에요.</div>
   </section>
 
+  <!-- 픽업 매장 (네이버 지도 연결) -->
   <section class="sec sec--tight" style="padding-top:40px;">
     <div class="eyebrow">PICKUP STORES</div>
     <div class="h2">내 주변 픽업 매장.</div>
-    <p class="lead">전국 매장에서 받을 수 있어요.</p>
+    <p class="lead">매장을 누르면 네이버 지도에서 위치를 확인할 수 있어요.</p>
     <div class="store-find">
-      <input type="text" placeholder="동·지하철역으로 검색" />
-      <button>검색</button>
+      <input id="storeq" type="text" placeholder="동·지하철역으로 검색" />
+      <button onclick="naverSearch()">검색</button>
     </div>
-    <div class="store"><div><div class="nm">위신싸 픽업 · 강남점</div><div class="ad">서울 강남구 테헤란로 ··</div></div><div class="dist">0.4km</div></div>
-    <div class="store"><div><div class="nm">위신싸 픽업 · 역삼점</div><div class="ad">서울 강남구 논현로 ··</div></div><div class="dist">0.9km</div></div>
-    <div class="store"><div><div class="nm">위신싸 픽업 · 선릉점</div><div class="ad">서울 강남구 선릉로 ··</div></div><div class="dist">1.3km</div></div>
+    {stores_html}
   </section>
 
+  <!-- 구매 + 신뢰 -->
   <section class="sec sec--tight">
     <a href="#" class="btn btn-primary" style="margin-bottom:10px;" onclick="openPay();return false;">지금 구매하기 →</a>
     <a href="#" class="btn btn-ghost" style="margin-bottom:20px;">품절됐어요 · 재입고 알림 받기</a>
@@ -320,6 +409,14 @@ def build_product(p):
     </div>
   </section>
 
+  <!-- 리뷰 -->
+  <section class="sec sec--tight reviews">
+    <div class="eyebrow">REVIEW</div>
+    <div class="h2" style="font-size:21px;margin-bottom:14px;">🙂 마셔본 사람들 한 줄 평</div>
+    {reviews_html}
+  </section>
+
+  <!-- 크로스셀 -->
   <section class="sec sec--tight">
     <div class="row-head"><div class="t">이 상품도 픽업 가능해요</div><a class="more" href="{base}products.html">전체 →</a></div>
     <div class="carousel">
@@ -327,6 +424,7 @@ def build_product(p):
     </div>
   </section>
 
+  <!-- FAQ -->
   <section class="sec faq sec--tight">
     <div class="eyebrow">FAQ</div>
     <details class="qa"><summary><span>픽업 기한이 있나요?</span></summary><p>결제 후 7일 이내 선택한 매장에서 픽업해 주세요. (드롭마다 상이)</p></details>
