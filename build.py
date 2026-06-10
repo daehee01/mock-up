@@ -9,7 +9,7 @@ import os, json, re
 from urllib.parse import quote
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-VERSION = "5"  # style.css / cart.js 캐시버스팅 — 디자인 변경 시 +1
+VERSION = "6"  # style.css / cart.js 캐시버스팅 — 디자인 변경 시 +1
 
 # 탐나불린 공통 정보 (브랜드 단위 — 캐스크별 제품이 공유)
 SHARED = {
@@ -110,7 +110,7 @@ PRODUCTS = [
 
 EVENTS = [
     {"code":"0001","title":"위스키한모금 PICK 위크","period":"2026.06.09 – 06.15",
-     "tag":"INFLUENCER DROP","img":IMG["sherry"],
+     "status":"live","tag":"INFLUENCER DROP","img":IMG["sherry"],
      "desc":"어디서도 쉽게 못 구하던 한정·단독 보틀을, 이번 주 위신싸에서만 특가로. 풀리면 끝납니다.",
      "products":["0001","0004","0003","0008"],
      "features":[
@@ -121,7 +121,7 @@ EVENTS = [
      "benefits":[("기간","2026.06.09 – 06.15 (7일)"),("혜택","픽 보틀 최대 19% 할인"),("픽업","전국 위신싸 매장 대면 픽업")]},
 
     {"code":"0002","title":"여름 하이볼 페스타","period":"2026.06.01 – 06.30",
-     "tag":"SUMMER FESTA","img":IMG["sb"],
+     "status":"live","tag":"SUMMER FESTA","img":IMG["sb"],
      "desc":"칠링해서, 얼려서, 토닉에 말아서. 더위를 날리는 여름 시즌 보틀과 하이볼 패키지를 모았습니다.",
      "products":["0003","0007"],
      "features":[
@@ -132,7 +132,7 @@ EVENTS = [
      "benefits":[("기간","2026.06.01 – 06.30 (한 달)"),("혜택","여름 시즌 한정 구성가"),("픽업","전국 위신싸 매장 대면 픽업")]},
 
     {"code":"0003","title":"위스키 입문자 기획전","period":"상시",
-     "tag":"FOR BEGINNERS","img":IMG["double"],
+     "status":"live","tag":"FOR BEGINNERS","img":IMG["double"],
      "desc":"‘뭐부터 마셔야 할지 모르겠다’는 분들을 위해. 부담 없는 가격·용량·선물 구성으로 첫 보틀을 골라드려요.",
      "products":["0002","0005","0006"],
      "features":[
@@ -141,6 +141,15 @@ EVENTS = [
         ("🎁 선물로도 딱","전용잔을 더한 기프트 세트는 위스키 입문 선물로 안성맞춤이에요."),
      ],
      "benefits":[("기간","상시 운영"),("혜택","입문 구성 상시 특가"),("픽업","전국 위신싸 매장 대면 픽업")]},
+
+    # --- 진행 예정 (오픈 전 · 상세 페이지 없음, 허브에 회색 배너로 노출) ---
+    {"code":"0004","title":"한정 캐스크 시크릿 드롭","status":"upcoming",
+     "tag":"COMING SOON","img":IMG["pinot"],"open_at":"2026.06.20 (토) 20:00 오픈",
+     "desc":"풀리는 순간 끝나는 단 한 통의 캐스크. 오픈 시각에 맞춰 알림을 받아보세요."},
+
+    {"code":"0005","title":"추석 기프트 컬렉션","status":"upcoming",
+     "tag":"COMING SOON","img":IMG["double"],"open_at":"2026.08.20 (목) 11:00 오픈",
+     "desc":"명절 선물용 기프트 세트·전용잔 구성을 준비 중이에요. 곧 만나요."},
 ]
 
 PMAP = {p["code"]: p for p in PRODUCTS}
@@ -451,6 +460,16 @@ def build_product(p):
 
 # ---------- events/index.html (프로모션관 허브 — 세로 배너) ----------
 def event_banner(e, base):
+    if e.get("status") == "upcoming":
+        return f'''      <div class="pbanner pbanner--soon" aria-disabled="true">
+        <div class="pb-body">
+          <div class="soon-badge">OPEN 예정</div>
+          <div class="ptt">{e['title']}</div>
+          <div class="pperiod">🕒 {e['open_at']}</div>
+          <div class="pdesc">{e['desc']}</div>
+        </div>
+        <img src="{e['img']}" alt="" />
+      </div>'''
     return f'''      <a class="pbanner" href="{base}events/{e['code']}/">
         <div class="pb-body">
           <div class="ptag">{e['tag']}</div>
@@ -465,7 +484,12 @@ def event_banner(e, base):
 
 def build_events_hub():
     base = "../"
-    banners = "\n".join(event_banner(e, base) for e in EVENTS)
+    live = [e for e in EVENTS if e.get("status") != "upcoming"]
+    soon = [e for e in EVENTS if e.get("status") == "upcoming"]
+    banners = "\n".join(event_banner(e, base) for e in live)
+    if soon:
+        banners += '\n      <div class="hub-divider">오픈 예정</div>\n'
+        banners += "\n".join(event_banner(e, base) for e in soon)
     body = f'''{header(base)}
 
   <div class="ev-top">
@@ -553,6 +577,8 @@ def main():
         write(f"product/{p['code']}/index.html", build_product(p))
     write("events/index.html", build_events_hub())
     for e in EVENTS:
+        if e.get("status") == "upcoming":
+            continue  # 오픈 전 — 허브에 회색 배너만, 상세 페이지 없음
         write(f"events/{e['code']}/index.html", build_event(e))
     print("done.")
 
