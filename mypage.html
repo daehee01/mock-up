@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
-<link rel="stylesheet" href="style.css?v=6" />
+<link rel="stylesheet" href="style.css?v=7" />
 </head>
 <body>
 <div class="wrap">
@@ -24,6 +24,37 @@
     </nav>
   </header>
 
+  <!-- 비회원(게스트) 뷰 -->
+  <div id="guestView" style="display:none;">
+    <div class="guest-hero">
+      <div class="avt"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+      <div class="gt">로그인하고<br /><b>위신싸 혜택</b>을 받아보세요.</div>
+      <div class="gd">비회원도 가격·프로모션은 자유롭게 둘러볼 수 있어요. 픽업 코드 관리와 장바구니·결제는 회원만 이용할 수 있습니다.</div>
+      <a href="join.html" class="btn btn-primary">회원가입 →</a>
+      <a href="#" class="btn btn-ghost" id="loginBtn">이미 회원이에요 · 로그인(데모)</a>
+    </div>
+
+    <section class="sec sec--tight" style="padding-top:28px;">
+      <div class="guest-warn">🔞 <div><b>만 19세 이상</b>만 구매·픽업할 수 있어요. 결제·픽업 시 신분증으로 <b>성인 본인인증</b>을 거칩니다.</div></div>
+    </section>
+
+    <section class="sec sec--tight">
+      <div class="row-head"><div class="t">회원이 되면</div></div>
+      <div class="guest-benefits">
+        <div class="gb"><span class="ic">🥃</span><div><div class="t">한정 드롭 알림</div><div class="d">풀리면 끝나는 한정 보틀, 오픈 시각에 바로 알려드려요.</div></div></div>
+        <div class="gb"><span class="ic">🏪</span><div><div class="t">픽업 코드 · 내역 관리</div><div class="d">주문·픽업 상태를 한눈에. 재방문 픽업도 간편하게.</div></div></div>
+        <div class="gb"><span class="ic">🎁</span><div><div class="t">첫 픽업 혜택</div><div class="d">가입 즉시 첫 구매 혜택과 회원 전용가를 받아가세요.</div></div></div>
+      </div>
+    </section>
+
+    <section class="sec sec--tight">
+      <a href="products.html" class="btn btn-ghost" style="margin-bottom:10px;">전체 상품 둘러보기 →</a>
+      <a href="events/" class="btn btn-ghost">진행 중인 프로모션 보기 →</a>
+    </section>
+  </div>
+
+  <!-- 회원 뷰 -->
+  <div id="memberView">
   <!-- 프로필 -->
   <div class="prof">
     <div class="avt">위</div>
@@ -93,8 +124,9 @@
     <a class="mrow" href="product/0003/">알림 설정<span class="r"></span></a>
     <div class="mrow">본인인증 정보<span class="r">인증완료</span></div>
     <a class="mrow" href="https://pf.kakao.com/_veluga/chat" target="_blank" rel="noopener">고객센터<span class="r">카카오 채널</span></a>
-    <div class="mrow" style="color:var(--ink-48);">로그아웃<span class="r" style="font-size:0;"></span></div>
+    <a class="mrow" href="#" id="logoutBtn" style="color:var(--ink-48);">로그아웃<span class="r" style="font-size:0;"></span></a>
   </section>
+  </div><!-- /memberView -->
 
   <footer class="ft">
     <div class="fl mark">위신<b>싸</b></div>
@@ -105,6 +137,21 @@
   </footer>
 
 </div>
-<script src="cart.js?v=6"></script>
+<script src="cart.js?v=7"></script>
+<script>
+  (function () {
+    var guest = document.getElementById('guestView'), member = document.getElementById('memberView');
+    function render() {
+      var m = WSSCart.isMember();
+      guest.style.display = m ? 'none' : '';
+      member.style.display = m ? '' : 'none';
+    }
+    render();
+    var lo = document.getElementById('logoutBtn');
+    if (lo) lo.addEventListener('click', function (e) { e.preventDefault(); WSSCart.setMember(false); location.reload(); });
+    var li = document.getElementById('loginBtn');
+    if (li) li.addEventListener('click', function (e) { e.preventDefault(); WSSCart.setMember(true); location.reload(); });
+  })();
+</script>
 </body>
 </html>

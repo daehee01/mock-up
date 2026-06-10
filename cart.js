@@ -31,8 +31,44 @@
     t._h = setTimeout(function () { t.classList.remove("show"); }, 2600);
   }
 
+  // 회원 상태 (데모) — 미설정 시 회원으로 간주(기존 데모 보존). mypage 로그인/로그아웃으로 전환.
+  var MKEY = "wss_member";
+  function isMember() { var v = localStorage.getItem(MKEY); return v === null ? true : v === "1"; }
+  function setMember(v) { localStorage.setItem(MKEY, v ? "1" : "0"); }
+
+  // 비회원 가입 게이트 모달 (장바구니 담기 클릭 시)
+  function showJoinGate(base) {
+    var ov = document.querySelector(".gate-overlay");
+    if (!ov) {
+      ov = document.createElement("div");
+      ov.className = "gate-overlay";
+      ov.innerHTML =
+        '<div class="gate-box" role="dialog" aria-modal="true">' +
+          '<div class="gate-ic">🔐</div>' +
+          '<div class="gate-t">회원가입이 필요해요!</div>' +
+          '<div class="gate-d">장바구니 담기·결제는 위신싸 회원만 이용할 수 있어요. 둘러보기·가격·프로모션은 자유롭게 보실 수 있습니다.</div>' +
+          '<div class="gate-warn">🔞 주류는 <b>만 19세 이상</b>만 구매·픽업할 수 있으며, 결제·픽업 시 <b>성인 본인인증</b>이 반드시 필요합니다.</div>' +
+          '<a class="btn btn-primary" href="' + base + 'join.html">회원가입 하러 가기 →</a>' +
+          '<button type="button" class="gate-close">다음에 할게요</button>' +
+        '</div>';
+      document.body.appendChild(ov);
+      ov.addEventListener("click", function (e) {
+        if (e.target === ov || (e.target.closest && e.target.closest(".gate-close"))) closeGate();
+      });
+    }
+    requestAnimationFrame(function () { ov.classList.add("open"); });
+    document.body.style.overflow = "hidden";
+  }
+  function closeGate() {
+    var ov = document.querySelector(".gate-overlay");
+    if (ov) ov.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeGate(); });
+
   var Cart = {
     read: read, write: write, count: count, total: total, won: won, badge: badge,
+    isMember: isMember, setMember: setMember,
     add: function (it) {
       var c = read(), f = null, i;
       for (i = 0; i < c.length; i++) { if (c[i].code === it.code) { f = c[i]; break; } }
@@ -67,6 +103,8 @@
     if (add) {
       var p = document.querySelector("[data-product]");
       if (!p) return;
+      var base = p.getAttribute("data-base") || "";
+      if (!isMember()) { showJoinGate(base); return; }  // 비회원: 담기 대신 가입 게이트
       var qel = document.querySelector("[data-qty]");
       var q = qel ? (parseInt(qel.textContent, 10) || 1) : 1;
       Cart.add({
@@ -76,7 +114,6 @@
         price: parseInt(p.getAttribute("data-price"), 10) || 0,
         qty: q
       });
-      var base = p.getAttribute("data-base") || "";
       toast('장바구니에 담았어요 · <a href="' + base + 'cart.html">장바구니 보기 →</a>');
     }
   });

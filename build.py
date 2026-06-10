@@ -9,7 +9,7 @@ import os, json, re
 from urllib.parse import quote
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-VERSION = "6"  # style.css / cart.js 캐시버스팅 — 디자인 변경 시 +1
+VERSION = "7"  # style.css / cart.js 캐시버스팅 — 디자인 변경 시 +1
 
 # 탐나불린 공통 정보 (브랜드 단위 — 캐스크별 제품이 공유)
 SHARED = {
