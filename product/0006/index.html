@@ -6,7 +6,7 @@
 <title>탐나불린 기프트 세트 — 위신싸</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
-<link rel="stylesheet" href="../../style.css?v=4" />
+<link rel="stylesheet" href="../../style.css?v=5" />
 </head>
 <body>
 <div class="wrap pad-cta">
@@ -14,11 +14,15 @@
     <a href="../../index.html" class="logo mark">위신<b>싸</b></a>
     <nav class="nav">
       <a href="../../products.html">전체상품</a>
-      <a href="../../events/0001/">프로모션관</a>
+      <a href="../../events/">프로모션관</a>
       <a href="../../about.html">About</a>
+      <a class="ico cart-ico" href="../../cart.html" aria-label="장바구니"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span class="cart-badge" data-cart-badge style="display:none">0</span></a>
       <a class="ico" href="../../mypage.html" aria-label="마이페이지"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></a>
     </nav>
   </header>
+
+  <!-- 장바구니용 상품 데이터 -->
+  <div data-product data-code="0006" data-name="탐나불린 기프트 세트" data-img="https://cdn.veluga.kr/drinks/pv/31253.png" data-price="69000" data-base="../../" hidden></div>
 
   <!-- 대표 이미지 (히어로 없음 / 이미지 하단 구매버튼 없음) -->
   <section class="pdp-media"><img src="https://cdn.veluga.kr/drinks/pv/31253.png" alt="탐나불린 기프트 세트" /></section>
@@ -110,7 +114,7 @@
 
   <!-- 구매 + 신뢰 -->
   <section class="sec sec--tight">
-    <a href="#" class="btn btn-primary" style="margin-bottom:10px;" onclick="openPay();return false;">지금 구매하기 →</a>
+    <button type="button" class="btn btn-primary" style="margin-bottom:10px;" data-add-cart>장바구니 담기</button>
     <a href="#" class="btn btn-ghost" style="margin-bottom:20px;">품절됐어요 · 재입고 알림 받기</a>
     <div class="trust-line">
       <span class="i">✅ <b>100% 정품</b></span>
@@ -181,59 +185,21 @@
   </footer>
 </div>
 
-<div class="cta-bar" id="pay">
-  <div class="price"><div class="now">69,000원</div></div>
-  <a href="#" class="btn btn-primary" onclick="openPay();return false;">구매하기</a>
-</div>
-
-<div class="pay-overlay" id="payModal" onclick="if(event.target===this)closePay()">
-  <div class="pay-sheet" role="dialog" aria-modal="true" aria-label="결제하기">
-    <div class="pay-grab"></div>
-    <div class="pay-head"><span>주문 / 결제</span><button class="pay-x" onclick="closePay()" aria-label="닫기">✕</button></div>
-    <div class="pay-scroll">
-      <div class="pay-order">
-        <img src="https://cdn.veluga.kr/drinks/pv/31253.png" alt="" />
-        <div class="pay-order-info"><div class="t">탐나불린 기프트 세트</div><div class="d">위신싸 픽업 · 강남점</div></div>
-        <div class="pay-order-amt">69,000원</div>
-      </div>
-      <div class="pay-sec">결제 수단</div>
-      <div class="pay-easy">
-        <button class="easy sel"><span class="tosspay">toss pay</span></button>
-        <button class="easy"><span style="color:#03c75a;font-weight:800;">N</span> Pay</button>
-        <button class="easy"><span style="color:#ffcd00;font-weight:900;">kakao</span> pay</button>
-      </div>
-      <div class="pay-methods">
-        <label class="pm"><input type="radio" name="pm" /><span>신용 · 체크카드</span></label>
-        <label class="pm"><input type="radio" name="pm" /><span>계좌이체</span></label>
-        <label class="pm"><input type="radio" name="pm" /><span>가상계좌</span></label>
-        <label class="pm"><input type="radio" name="pm" /><span>휴대폰</span></label>
-      </div>
-      <label class="pay-agree-all"><input type="checkbox" id="agreeAll" /><span>전체 동의하기</span></label>
-      <div class="pay-agree-sub">
-        <label><input type="checkbox" class="agsub" /><span>(필수) 결제 서비스 이용약관, 개인정보 처리 동의</span><i>›</i></label>
-        <label><input type="checkbox" class="agsub" /><span>(필수) 만 19세 이상이며 본인이 픽업합니다</span><i>›</i></label>
-      </div>
-    </div>
-    <div class="pay-foot"><button class="pay-cta" onclick="payDemo()">69,000원 결제하기</button></div>
+<div class="cta-bar">
+  <div class="qty">
+    <button type="button" data-qty-dec aria-label="수량 감소">−</button>
+    <span data-qty>1</span>
+    <button type="button" data-qty-inc aria-label="수량 증가">+</button>
   </div>
+  <button type="button" class="btn btn-primary" data-add-cart>장바구니 담기</button>
 </div>
   <script>
-    function openPay(){ document.getElementById('payModal').classList.add('open'); document.body.style.overflow='hidden'; }
-    function closePay(){ document.getElementById('payModal').classList.remove('open'); document.body.style.overflow=''; }
-    function payDemo(){ alert('결제는 데모입니다. 실제 연동 시 토스페이먼츠 결제위젯 SDK로 대체됩니다.'); closePay(); }
     function naverSearch(){
       var v=(document.getElementById('storeq').value||'').trim();
       var q=encodeURIComponent((v?v+' ':'')+'위신싸 픽업 주류');
       window.open('https://map.naver.com/p/search/'+q,'_blank');
     }
-    document.addEventListener('change',function(e){
-      if(e.target.id==='agreeAll'){ document.querySelectorAll('.agsub').forEach(function(c){c.checked=e.target.checked;}); }
-      if(e.target.classList.contains('agsub')){
-        var all=document.querySelectorAll('.agsub'),on=document.querySelectorAll('.agsub:checked');
-        document.getElementById('agreeAll').checked=all.length===on.length;
-      }
-    });
-    document.addEventListener('keydown',function(e){ if(e.key==='Escape') closePay(); });
   </script>
+<script src="../../cart.js?v=5"></script>
 </body>
 </html>

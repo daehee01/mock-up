@@ -5,11 +5,11 @@
 #   product/<code>/index.html   상품 상세 (히어로 없이 대표 이미지 우선) + Toss 결제 모달
 #   events/<code>/index.html    프로모션관
 # index.html / about.html 은 수기 유지 (브랜드 페이지).
-import os, json
+import os, json, re
 from urllib.parse import quote
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-VERSION = "4"  # style.css 캐시버스팅 — 디자인 변경 시 +1
+VERSION = "5"  # style.css / cart.js 캐시버스팅 — 디자인 변경 시 +1
 
 # 탐나불린 공통 정보 (브랜드 단위 — 캐스크별 제품이 공유)
 SHARED = {
@@ -110,8 +110,37 @@ PRODUCTS = [
 
 EVENTS = [
     {"code":"0001","title":"위스키한모금 PICK 위크","period":"2026.06.09 – 06.15",
+     "tag":"INFLUENCER DROP","img":IMG["sherry"],
      "desc":"어디서도 쉽게 못 구하던 한정·단독 보틀을, 이번 주 위신싸에서만 특가로. 풀리면 끝납니다.",
-     "products":["0001","0004","0003","0008"]},
+     "products":["0001","0004","0003","0008"],
+     "features":[
+        ("🥃 인플루언서가 직접 고른 보틀","‘위스키한모금’이 마셔보고 추천한 보틀만 모았어요. 실패 없는 픽입니다."),
+        ("⏳ 이번 주 단 7일","드롭 기간이 지나면 이 가격은 사라집니다. 재입고는 보장되지 않아요."),
+        ("🏪 집 근처에서 픽업","결제 후 가까운 위신싸 매장에서 3분 만에 픽업. 배송을 기다릴 필요가 없어요."),
+     ],
+     "benefits":[("기간","2026.06.09 – 06.15 (7일)"),("혜택","픽 보틀 최대 19% 할인"),("픽업","전국 위신싸 매장 대면 픽업")]},
+
+    {"code":"0002","title":"여름 하이볼 페스타","period":"2026.06.01 – 06.30",
+     "tag":"SUMMER FESTA","img":IMG["sb"],
+     "desc":"칠링해서, 얼려서, 토닉에 말아서. 더위를 날리는 여름 시즌 보틀과 하이볼 패키지를 모았습니다.",
+     "products":["0003","0007"],
+     "features":[
+        ("🧊 칠링·하이볼에 최적","화이트와인 캐스크 특유의 청량감. 얼음과 토닉만 있으면 시그니처 하이볼 완성."),
+        ("📦 토닉까지 한 박스","하이볼팩은 보틀과 토닉을 함께 구성해, 받자마자 바로 즐길 수 있어요."),
+        ("☀️ 6월 한 달 시즌가","여름 시즌 동안만 적용되는 가격이에요. 시즌이 끝나면 정가로 돌아갑니다."),
+     ],
+     "benefits":[("기간","2026.06.01 – 06.30 (한 달)"),("혜택","여름 시즌 한정 구성가"),("픽업","전국 위신싸 매장 대면 픽업")]},
+
+    {"code":"0003","title":"위스키 입문자 기획전","period":"상시",
+     "tag":"FOR BEGINNERS","img":IMG["double"],
+     "desc":"‘뭐부터 마셔야 할지 모르겠다’는 분들을 위해. 부담 없는 가격·용량·선물 구성으로 첫 보틀을 골라드려요.",
+     "products":["0002","0005","0006"],
+     "features":[
+        ("🍯 달콤·부드러운 입문용","탐나불린은 셰리 단맛이 부드러워 위스키가 처음인 분도 거부감이 없어요."),
+        ("🥃 작게 시작하는 미니어처","200mL 미니로 부담 없이 맛만 먼저 보고, 마음에 들면 풀보틀로."),
+        ("🎁 선물로도 딱","전용잔을 더한 기프트 세트는 위스키 입문 선물로 안성맞춤이에요."),
+     ],
+     "benefits":[("기간","상시 운영"),("혜택","입문 구성 상시 특가"),("픽업","전국 위신싸 매장 대면 픽업")]},
 ]
 
 PMAP = {p["code"]: p for p in PRODUCTS}
@@ -122,8 +151,9 @@ def header(base):
     <a href="{base}index.html" class="logo mark">위신<b>싸</b></a>
     <nav class="nav">
       <a href="{base}products.html">전체상품</a>
-      <a href="{base}events/0001/">프로모션관</a>
+      <a href="{base}events/">프로모션관</a>
       <a href="{base}about.html">About</a>
+      <a class="ico cart-ico" href="{base}cart.html" aria-label="장바구니"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span class="cart-badge" data-cart-badge style="display:none">0</span></a>
       <a class="ico" href="{base}mypage.html" aria-label="마이페이지"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></a>
     </nav>
   </header>'''
@@ -147,6 +177,11 @@ def price_html(p):
     if p.get("was"):
         out += f' <span class="was">{p["was"]}</span>'
     return out
+
+
+def price_num(p):
+    """'89,000원' → 89000 (장바구니 합계용 숫자 단가)"""
+    return int(re.sub(r"[^0-9]", "", p["now"]) or 0)
 
 
 def card(p, base):
@@ -177,6 +212,7 @@ def page(title, body, base=""):
 <div class="wrap">
 {body}
 </div>
+<script src="{base}cart.js?v={VERSION}"></script>
 </body>
 </html>
 '''
@@ -223,58 +259,14 @@ def build_products():
 
 
 # ---------- product/<code>/index.html ----------
-PAY_SCRIPT = '''  <script>
-    function openPay(){ document.getElementById('payModal').classList.add('open'); document.body.style.overflow='hidden'; }
-    function closePay(){ document.getElementById('payModal').classList.remove('open'); document.body.style.overflow=''; }
-    function payDemo(){ alert('결제는 데모입니다. 실제 연동 시 토스페이먼츠 결제위젯 SDK로 대체됩니다.'); closePay(); }
+# 결제(장바구니 일괄 결제)는 cart.html로 이관. 상품 상세는 매장 검색만 보유.
+STORE_SCRIPT = '''  <script>
     function naverSearch(){
       var v=(document.getElementById('storeq').value||'').trim();
       var q=encodeURIComponent((v?v+' ':'')+'위신싸 픽업 주류');
       window.open('https://map.naver.com/p/search/'+q,'_blank');
     }
-    document.addEventListener('change',function(e){
-      if(e.target.id==='agreeAll'){ document.querySelectorAll('.agsub').forEach(function(c){c.checked=e.target.checked;}); }
-      if(e.target.classList.contains('agsub')){
-        var all=document.querySelectorAll('.agsub'),on=document.querySelectorAll('.agsub:checked');
-        document.getElementById('agreeAll').checked=all.length===on.length;
-      }
-    });
-    document.addEventListener('keydown',function(e){ if(e.key==='Escape') closePay(); });
   </script>'''
-
-
-def pay_modal(p):
-    return f'''<div class="pay-overlay" id="payModal" onclick="if(event.target===this)closePay()">
-  <div class="pay-sheet" role="dialog" aria-modal="true" aria-label="결제하기">
-    <div class="pay-grab"></div>
-    <div class="pay-head"><span>주문 / 결제</span><button class="pay-x" onclick="closePay()" aria-label="닫기">✕</button></div>
-    <div class="pay-scroll">
-      <div class="pay-order">
-        <img src="{p['img']}" alt="" />
-        <div class="pay-order-info"><div class="t">{p['name']}</div><div class="d">위신싸 픽업 · 강남점</div></div>
-        <div class="pay-order-amt">{p['now']}</div>
-      </div>
-      <div class="pay-sec">결제 수단</div>
-      <div class="pay-easy">
-        <button class="easy sel"><span class="tosspay">toss pay</span></button>
-        <button class="easy"><span style="color:#03c75a;font-weight:800;">N</span> Pay</button>
-        <button class="easy"><span style="color:#ffcd00;font-weight:900;">kakao</span> pay</button>
-      </div>
-      <div class="pay-methods">
-        <label class="pm"><input type="radio" name="pm" /><span>신용 · 체크카드</span></label>
-        <label class="pm"><input type="radio" name="pm" /><span>계좌이체</span></label>
-        <label class="pm"><input type="radio" name="pm" /><span>가상계좌</span></label>
-        <label class="pm"><input type="radio" name="pm" /><span>휴대폰</span></label>
-      </div>
-      <label class="pay-agree-all"><input type="checkbox" id="agreeAll" /><span>전체 동의하기</span></label>
-      <div class="pay-agree-sub">
-        <label><input type="checkbox" class="agsub" /><span>(필수) 결제 서비스 이용약관, 개인정보 처리 동의</span><i>›</i></label>
-        <label><input type="checkbox" class="agsub" /><span>(필수) 만 19세 이상이며 본인이 픽업합니다</span><i>›</i></label>
-      </div>
-    </div>
-    <div class="pay-foot"><button class="pay-cta" onclick="payDemo()">{p['now']} 결제하기</button></div>
-  </div>
-</div>'''
 
 
 def build_product(p):
@@ -313,6 +305,9 @@ def build_product(p):
         f'<div><div class="nm">위신싸 픽업 · {nm}</div><div class="ad">{ad}</div></div><div class="dist">{d} ›</div></a>'
         for nm, ad, d in stores)
     body = f'''{header(base)}
+
+  <!-- 장바구니용 상품 데이터 -->
+  <div data-product data-code="{p['code']}" data-name="{p['name']}" data-img="{p['img']}" data-price="{price_num(p)}" data-base="{base}" hidden></div>
 
   <!-- 대표 이미지 (히어로 없음 / 이미지 하단 구매버튼 없음) -->
   <section class="pdp-media"><img src="{p['img']}" alt="{p['name']}" /></section>
@@ -402,7 +397,7 @@ def build_product(p):
 
   <!-- 구매 + 신뢰 -->
   <section class="sec sec--tight">
-    <a href="#" class="btn btn-primary" style="margin-bottom:10px;" onclick="openPay();return false;">지금 구매하기 →</a>
+    <button type="button" class="btn btn-primary" style="margin-bottom:10px;" data-add-cart>장바구니 담기</button>
     <a href="#" class="btn btn-ghost" style="margin-bottom:20px;">품절됐어요 · 재입고 알림 받기</a>
     <div class="trust-line">
       <span class="i">✅ <b>100% 정품</b></span>
@@ -436,42 +431,111 @@ def build_product(p):
   </section>
 
 {footer()}'''
-    # 스티키 CTA + 모달은 .wrap 밖
+    # 스티키 CTA(수량 + 장바구니 담기)는 .wrap 밖
     tail = f'''
-<div class="cta-bar" id="pay">
-  <div class="price"><div class="now">{p['now']}</div>{f'<div class="was">정가 {p["was"]}</div>' if p.get("was") else ''}</div>
-  <a href="#" class="btn btn-primary" onclick="openPay();return false;">구매하기</a>
+<div class="cta-bar">
+  <div class="qty">
+    <button type="button" data-qty-dec aria-label="수량 감소">−</button>
+    <span data-qty>1</span>
+    <button type="button" data-qty-inc aria-label="수량 증가">+</button>
+  </div>
+  <button type="button" class="btn btn-primary" data-add-cart>장바구니 담기</button>
 </div>
-
-{pay_modal(p)}
-{PAY_SCRIPT}'''
+{STORE_SCRIPT}'''
     html = page(p['name'] + " — 위신싸", body, base=base)
-    # .wrap에 pad-cta 부여 + tail 삽입 (</body> 앞)
+    # .wrap에 pad-cta 부여 + tail 삽입 (.wrap 닫힘 직후, cart.js 앞)
     html = html.replace('<div class="wrap">', '<div class="wrap pad-cta">')
-    html = html.replace('</div>\n</body>', '</div>\n' + tail + '\n</body>')
+    html = html.replace('</div>\n<script src=', '</div>\n' + tail + '\n<script src=')
     return html
 
 
-# ---------- events/<code>/index.html ----------
-def build_event(e):
-    base = "../../"
-    prods = [PMAP[c] for c in e["products"] if c in PMAP]
-    cards = "\n".join(card(p, base) for p in prods)
+# ---------- events/index.html (프로모션관 허브 — 세로 배너) ----------
+def event_banner(e, base):
+    return f'''      <a class="pbanner" href="{base}events/{e['code']}/">
+        <div class="pb-body">
+          <div class="ptag">{e['tag']}</div>
+          <div class="ptt">{e['title']}</div>
+          <div class="pperiod">{e['period']}</div>
+          <div class="pdesc">{e['desc']}</div>
+          <div class="pcta">프로모션 보기 →</div>
+        </div>
+        <img src="{e['img']}" alt="" />
+      </a>'''
+
+
+def build_events_hub():
+    base = "../"
+    banners = "\n".join(event_banner(e, base) for e in EVENTS)
     body = f'''{header(base)}
 
   <div class="ev-top">
     <div class="eyebrow eyebrow--amber">PROMOTION</div>
-    <h1>{e['title']}</h1>
-    <div class="period">{e['period']}</div>
-    <div class="desc">{e['desc']}</div>
+    <h1>프로모션관</h1>
+    <div class="desc">위신싸가 이번에 준비한 한정·시즌·기획 프로모션. 배너를 눌러 자세히 확인하세요.</div>
   </div>
 
-  <div class="grid">
+  <div class="promo-hub">
+{banners}
+  </div>
+
+{footer()}'''
+    return page("위신싸 — 프로모션관", body, base=base)
+
+
+# ---------- events/<code>/index.html (프로모션 상세) ----------
+def build_event(e):
+    base = "../../"
+    prods = [PMAP[c] for c in e["products"] if c in PMAP]
+    cards = "\n".join(card(p, base) for p in prods)
+    feats = "\n".join(
+        f'''      <div class="step"><div class="n">{i+1}</div><div><div class="t">{ttl}</div><div class="d">{desc}</div></div></div>'''
+        for i, (ttl, desc) in enumerate(e["features"]))
+    benefits = "\n".join(
+        f'''      <div class="bf"><span class="dot"></span><b>{k}</b><span>{v}</span></div>'''
+        for k, v in e["benefits"])
+    body = f'''{header(base)}
+
+  <!-- 상단 배너 (히어로) -->
+  <section class="ev-hero">
+    <div class="eh-in">
+      <img src="{e['img']}" alt="" />
+      <div>
+        <div class="ptag">{e['tag']}</div>
+        <h1>{e['title']}</h1>
+        <div class="pperiod">{e['period']}</div>
+      </div>
+    </div>
+    <div class="ehdesc">{e['desc']}</div>
+  </section>
+
+  <!-- 프로모션 상세 내용 -->
+  <section class="sec sec--tight" style="padding-top:34px;">
+    <div class="eyebrow eyebrow--amber">WHY THIS DROP</div>
+    <div class="h2" style="font-size:21px;margin-bottom:6px;">이 프로모션, 이래서 좋아요</div>
+    <div style="margin-top:8px;">
+{feats}
+    </div>
+  </section>
+
+  <!-- 혜택 안내 -->
+  <section class="sec sec--tight">
+    <div class="eyebrow">PROMOTION INFO</div>
+    <div class="h2" style="font-size:21px;margin-bottom:14px;">혜택 안내</div>
+    <div class="benefit-box">
+{benefits}
+    </div>
+  </section>
+
+  <!-- 연관 상품 -->
+  <section class="sec sec--tight">
+    <div class="row-head"><div class="t">프로모션 상품</div><a class="more" href="{base}products.html">전체 →</a></div>
+  </section>
+  <div class="grid" style="padding-top:0;">
 {cards}
   </div>
 
 {footer()}'''
-    return page(e['title'] + " — 위신싸 프로모션관", body, base=base)
+    return page(e['title'] + " — 위신싸 프로모션", body, base=base)
 
 
 def write(path, html):
@@ -487,6 +551,7 @@ def main():
     write("products.html", build_products())
     for p in PRODUCTS:
         write(f"product/{p['code']}/index.html", build_product(p))
+    write("events/index.html", build_events_hub())
     for e in EVENTS:
         write(f"events/{e['code']}/index.html", build_event(e))
     print("done.")
