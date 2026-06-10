@@ -9,7 +9,27 @@ import os, json, re
 from urllib.parse import quote
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-VERSION = "7"  # style.css / cart.js 캐시버스팅 — 디자인 변경 시 +1
+VERSION = "8"  # style.css / cart.js 캐시버스팅 — 디자인 변경 시 +1
+
+# 주종 필터 기준 — 벨루가 ops-drink/settings.json 의 주종 목록을 빌드 시 참조
+SETTINGS_PATH = os.path.normpath(os.path.join(ROOT, "..", "..", "ops-drink", "settings.json"))
+# settings.json 미존재(예: mock-up 단독 빌드) 시 폴백 — 동일 주종 목록 유지
+CATEGORIES_FALLBACK = ["국산 맥주", "수입 맥주", "소주", "와인", "위스키", "일반 증류주",
+                       "탁주", "과실주", "중국술", "사케", "청주", "약주", "리큐르", "브랜디",
+                       "기타 주류", "논알콜"]
+
+
+def load_categories():
+    try:
+        with open(SETTINGS_PATH, encoding="utf-8") as f:
+            data = json.load(f)
+        cats = [k for k in data["주종별_스타일_값"].keys() if k and k != "주종"]
+        return cats or CATEGORIES_FALLBACK
+    except Exception:
+        return CATEGORIES_FALLBACK
+
+
+CATEGORIES = load_categories()
 
 # 탐나불린 공통 정보 (브랜드 단위 — 캐스크별 제품이 공유)
 SHARED = {
@@ -198,7 +218,7 @@ def card(p, base):
     if p.get("badge"):
         cls = "badge deal" if p.get("badge_kind") == "deal" else "badge"
         badge = f'<span class="{cls}">{p["badge"]}</span>'
-    return f'''      <a class="prod" href="{base}product/{p['code']}/" data-name="{p['search']}">
+    return f'''      <a class="prod" href="{base}product/{p['code']}/" data-name="{p['search']}" data-cat="{p.get('cat', '위스키')}">
         {badge}
         <img src="{p['img']}" alt="" />
         <div class="nm">{p['name']}</div>
@@ -230,6 +250,9 @@ def page(title, body, base=""):
 # ---------- products.html ----------
 def build_products():
     cards = "\n".join(card(p, "") for p in PRODUCTS)
+    cat_chips = "\n".join(
+        f'      <button type="button" class="fchip" data-cat="{c}">{c}</button>'
+        for c in CATEGORIES)
     body = f'''{header("")}
 
   <div class="ptop">
@@ -242,26 +265,42 @@ def build_products():
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7a7a7a" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
       <input id="q" type="text" placeholder="상품명·증류소·캐스크 검색" autocomplete="off" />
     </div>
+    <!-- 주종 필터 (벨루가 settings.json 기준) -->
+    <div class="filterbar" id="filterbar">
+      <button type="button" class="fchip on" data-cat="">전체</button>
+{cat_chips}
+    </div>
   </div>
 
   <div class="grid" id="grid">
 {cards}
   </div>
-  <div class="empty" id="empty">검색 결과가 없어요.</div>
+  <div class="empty" id="empty">해당 주종의 상품이 없어요.</div>
 
 {footer()}
 
   <script>
     var q=document.getElementById('q'),cards=[].slice.call(document.querySelectorAll('#grid .prod')),
-        countEl=document.getElementById('count'),emptyEl=document.getElementById('empty');
+        countEl=document.getElementById('count'),emptyEl=document.getElementById('empty'),
+        chips=[].slice.call(document.querySelectorAll('#filterbar .fchip')),activeCat='';
     function norm(s){{return (s||'').toLowerCase().replace(/\\s+/g,'');}}
-    q.addEventListener('input',function(){{
+    function apply(){{
       var t=norm(q.value),n=0;
       cards.forEach(function(c){{
         var hay=norm(c.getAttribute('data-name')+' '+c.querySelector('.nm').textContent);
-        var m=t===''||hay.indexOf(t)!==-1; c.style.display=m?'':'none'; if(m)n++;
+        var okText=t===''||hay.indexOf(t)!==-1;
+        var okCat=activeCat===''||c.getAttribute('data-cat')===activeCat;
+        var m=okText&&okCat; c.style.display=m?'':'none'; if(m)n++;
       }});
       countEl.textContent=n; emptyEl.style.display=n===0?'block':'none';
+    }}
+    q.addEventListener('input',apply);
+    chips.forEach(function(ch){{
+      ch.addEventListener('click',function(){{
+        chips.forEach(function(x){{x.classList.remove('on');}});
+        ch.classList.add('on'); activeCat=ch.getAttribute('data-cat');
+        ch.scrollIntoView({{inline:'center',block:'nearest',behavior:'smooth'}}); apply();
+      }});
     }});
   </script>'''
     return page("위신싸 — 전체 상품", body, base="")

@@ -236,6 +236,15 @@ img{display:block;}
 .searchbox input{flex:1;border:none;outline:none;font-size:15.5px;font-family:var(--font);
   letter-spacing:-0.015em;color:var(--ink);background:transparent;}
 .searchbox input::placeholder{color:var(--ink-48);}
+/* 주종 필터 칩 (가로 스크롤) */
+.filterbar{display:flex;gap:8px;overflow-x:auto;margin:13px calc(var(--pad) * -1) 0;padding:0 var(--pad) 2px;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.filterbar::-webkit-scrollbar{display:none;}
+.fchip{flex:0 0 auto;border:1px solid var(--hairline);background:var(--canvas);color:var(--ink-80);
+  font-family:var(--font);font-size:13px;font-weight:600;letter-spacing:-0.015em;padding:8px 14px;border-radius:9999px;
+  cursor:pointer;white-space:nowrap;transition:background .14s,border-color .14s,color .14s;}
+.fchip:hover{border-color:#d3d5cf;}
+.fchip.on{background:var(--brand);border-color:var(--brand);color:#fff;}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px;padding:8px var(--pad) 48px;}
 .grid .prod{flex:initial;width:auto;}
 .empty{display:none;text-align:center;color:var(--ink-48);font-size:15px;letter-spacing:-0.01em;padding:48px 0 60px;}

@@ -6,7 +6,7 @@
 <title>위신싸 — 전체 상품</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
-<link rel="stylesheet" href="style.css?v=7" />
+<link rel="stylesheet" href="style.css?v=8" />
 </head>
 <body>
 <div class="wrap">
@@ -31,59 +31,79 @@
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7a7a7a" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
       <input id="q" type="text" placeholder="상품명·증류소·캐스크 검색" autocomplete="off" />
     </div>
+    <!-- 주종 필터 (벨루가 settings.json 기준) -->
+    <div class="filterbar" id="filterbar">
+      <button type="button" class="fchip on" data-cat="">전체</button>
+      <button type="button" class="fchip" data-cat="국산 맥주">국산 맥주</button>
+      <button type="button" class="fchip" data-cat="수입 맥주">수입 맥주</button>
+      <button type="button" class="fchip" data-cat="소주">소주</button>
+      <button type="button" class="fchip" data-cat="와인">와인</button>
+      <button type="button" class="fchip" data-cat="위스키">위스키</button>
+      <button type="button" class="fchip" data-cat="일반 증류주">일반 증류주</button>
+      <button type="button" class="fchip" data-cat="탁주">탁주</button>
+      <button type="button" class="fchip" data-cat="과실주">과실주</button>
+      <button type="button" class="fchip" data-cat="중국술">중국술</button>
+      <button type="button" class="fchip" data-cat="사케">사케</button>
+      <button type="button" class="fchip" data-cat="청주">청주</button>
+      <button type="button" class="fchip" data-cat="약주">약주</button>
+      <button type="button" class="fchip" data-cat="리큐르">리큐르</button>
+      <button type="button" class="fchip" data-cat="브랜디">브랜디</button>
+      <button type="button" class="fchip" data-cat="기타 주류">기타 주류</button>
+      <button type="button" class="fchip" data-cat="논알콜">논알콜</button>
+    </div>
   </div>
 
   <div class="grid" id="grid">
-      <a class="prod" href="product/0001/" data-name="탐나불린 셰리 캐스크 스페이사이드 싱글몰트 한정">
+      <a class="prod" href="product/0001/" data-name="탐나불린 셰리 캐스크 스페이사이드 싱글몰트 한정" data-cat="위스키">
         <span class="badge">12병 남음</span>
         <img src="https://cdn.veluga.kr/drinks/pv/31081.png" alt="" />
         <div class="nm">탐나불린 셰리 캐스크</div>
         <div class="meta">700mL · 40%</div>
         <div class="price"><span class="off">19%</span><span class="now">89,000원</span> <span class="was">110,000</span></div>
       </a>
-      <a class="prod" href="product/0002/" data-name="탐나불린 더블 캐스크 스페이사이드 싱글몰트 단독">
+      <a class="prod" href="product/0002/" data-name="탐나불린 더블 캐스크 스페이사이드 싱글몰트 단독" data-cat="위스키">
         <span class="badge deal">단독</span>
         <img src="https://cdn.veluga.kr/drinks/pv/31253.png" alt="" />
         <div class="nm">탐나불린 더블 캐스크</div>
         <div class="meta">700mL · 40%</div>
         <div class="price"><span class="now">59,000원</span></div>
       </a>
-      <a class="prod" href="product/0003/" data-name="탐나불린 쇼비뇽 블랑 캐스크 화이트와인 여름">
+      <a class="prod" href="product/0003/" data-name="탐나불린 쇼비뇽 블랑 캐스크 화이트와인 여름" data-cat="위스키">
         <span class="badge">여름</span>
         <img src="https://cdn.veluga.kr/drinks/pv/31244.png" alt="" />
         <div class="nm">탐나불린 쇼비뇽 블랑</div>
         <div class="meta">700mL · 40%</div>
         <div class="price"><span class="now">72,000원</span></div>
       </a>
-      <a class="prod" href="product/0004/" data-name="탐나불린 저먼 피노 누아 캐스크 레드와인 한정 레어">
+      <a class="prod" href="product/0004/" data-name="탐나불린 저먼 피노 누아 캐스크 레드와인 한정 레어" data-cat="위스키">
         <span class="badge">한정</span>
         <img src="https://cdn.veluga.kr/drinks/30879/pv/main/be6df03a84774220bdb94eac1f7089d5_%E1%84%90%E1%85%A1%E1%86%B7%E1%84%82%E1%85%A1%E1%84%87%E1%85%AE%E1%86%AF%E1%84%85%E1%85%B5%E1%86%AB_%E1%84%8C%E1%85%A5%E1%84%86%E1%85%A5%E1%86%AB_%E1%84%91%E1%85%B5%E1%84%82%E1%85%A9_%E1%84%82%E1%85%AE%E1%84%8B%E1%85%A1.png" alt="" />
         <div class="nm">탐나불린 피노 누아</div>
         <div class="meta">700mL · 40%</div>
         <div class="price"><span class="now">94,000원</span></div>
       </a>
-      <a class="prod" href="product/0005/" data-name="탐나불린 셰리 캐스크 미니어처 200ml 입문">
+      <a class="prod" href="product/0005/" data-name="탐나불린 셰리 캐스크 미니어처 200ml 입문" data-cat="위스키">
         
         <img src="https://cdn.veluga.kr/drinks/pv/31081.png" alt="" />
         <div class="nm">탐나불린 셰리 200mL</div>
         <div class="meta">200mL · 40%</div>
         <div class="price"><span class="now">29,000원</span></div>
       </a>
-      <a class="prod" href="product/0006/" data-name="탐나불린 더블 캐스크 기프트 세트 선물 전용잔">
+      <a class="prod" href="product/0006/" data-name="탐나불린 더블 캐스크 기프트 세트 선물 전용잔" data-cat="위스키">
         <span class="badge deal">선물</span>
         <img src="https://cdn.veluga.kr/drinks/pv/31253.png" alt="" />
         <div class="nm">탐나불린 기프트 세트</div>
         <div class="meta">700mL + 전용잔 · 40%</div>
         <div class="price"><span class="now">69,000원</span></div>
       </a>
-      <a class="prod" href="product/0007/" data-name="탐나불린 쇼비뇽 블랑 하이볼 패키지 토닉 분다버그 여름">
+      <a class="prod" href="product/0007/" data-name="탐나불린 쇼비뇽 블랑 하이볼 패키지 토닉 분다버그 여름" data-cat="위스키">
         <span class="badge">여름</span>
         <img src="https://cdn.veluga.kr/drinks/pv/31244.png" alt="" />
         <div class="nm">쇼비뇽 블랑 하이볼팩</div>
         <div class="meta">700mL + 토닉 · 40%</div>
         <div class="price"><span class="now">79,000원</span></div>
       </a>
-      <a class="prod" href="product/0008/" data-name="탐나불린 셰리 더블 캐스크 2종 테이스팅 세트 비교">
+      <a class="prod" href="product/0008/" data-name="탐나불린 셰리 더블 캐스크 2종 테이스팅 세트 비교" data-cat="위스키">
         <span class="badge deal">테이스팅</span>
         <img src="https://cdn.veluga.kr/drinks/pv/31081.png" alt="" />
         <div class="nm">셰리·더블 2종 세트</div>
@@ -91,7 +111,7 @@
         <div class="price"><span class="now">139,000원</span></div>
       </a>
   </div>
-  <div class="empty" id="empty">검색 결과가 없어요.</div>
+  <div class="empty" id="empty">해당 주종의 상품이 없어요.</div>
 
   <footer class="ft">
     <div class="fl mark">위신<b>싸</b></div>
@@ -103,18 +123,29 @@
 
   <script>
     var q=document.getElementById('q'),cards=[].slice.call(document.querySelectorAll('#grid .prod')),
-        countEl=document.getElementById('count'),emptyEl=document.getElementById('empty');
+        countEl=document.getElementById('count'),emptyEl=document.getElementById('empty'),
+        chips=[].slice.call(document.querySelectorAll('#filterbar .fchip')),activeCat='';
     function norm(s){return (s||'').toLowerCase().replace(/\s+/g,'');}
-    q.addEventListener('input',function(){
+    function apply(){
       var t=norm(q.value),n=0;
       cards.forEach(function(c){
         var hay=norm(c.getAttribute('data-name')+' '+c.querySelector('.nm').textContent);
-        var m=t===''||hay.indexOf(t)!==-1; c.style.display=m?'':'none'; if(m)n++;
+        var okText=t===''||hay.indexOf(t)!==-1;
+        var okCat=activeCat===''||c.getAttribute('data-cat')===activeCat;
+        var m=okText&&okCat; c.style.display=m?'':'none'; if(m)n++;
       });
       countEl.textContent=n; emptyEl.style.display=n===0?'block':'none';
+    }
+    q.addEventListener('input',apply);
+    chips.forEach(function(ch){
+      ch.addEventListener('click',function(){
+        chips.forEach(function(x){x.classList.remove('on');});
+        ch.classList.add('on'); activeCat=ch.getAttribute('data-cat');
+        ch.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'}); apply();
+      });
     });
   </script>
 </div>
-<script src="cart.js?v=7"></script>
+<script src="cart.js?v=8"></script>
 </body>
 </html>
