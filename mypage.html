@@ -35,14 +35,26 @@
   <!-- 픽업 대기 -->
   <section class="sec sec--tight">
     <div class="row-head"><div class="t">픽업 대기</div></div>
-    <a class="waitcard" href="product/0001/">
-      <img src="https://cdn.veluga.kr/drinks/pv/31081.png" alt="" />
-      <div>
-        <div class="t">탐나불린 셰리 캐스크</div>
-        <div class="d">위신싸 픽업 · 강남점 · ~6/15까지</div>
+    <div class="waitwrap">
+      <a class="waitcard" href="product/0001/">
+        <img src="https://cdn.veluga.kr/drinks/pv/31081.png" alt="" />
+        <div>
+          <div class="t">탐나불린 셰리 캐스크</div>
+          <div class="d">위신싸 픽업 · 강남점 · ~6/15까지</div>
+        </div>
+        <div class="code"><div class="lbl">픽업코드</div><div class="v">WSS-4821</div></div>
+      </a>
+      <!-- 픽업 진행 상태: 주문접수 → 픽업 준비중 → 픽업 가능(현재) → 픽업 완료 -->
+      <div class="pickup-prog">
+        <div class="pp-track">
+          <div class="pp-fill" style="width:50%;"></div>
+          <div class="pp-step done"><span class="pp-dot"></span><span class="pp-lbl">주문접수</span></div>
+          <div class="pp-step done"><span class="pp-dot"></span><span class="pp-lbl">픽업 준비중</span></div>
+          <div class="pp-step curr"><span class="pp-dot"></span><span class="pp-lbl">픽업 가능</span></div>
+          <div class="pp-step"><span class="pp-dot"></span><span class="pp-lbl">픽업 완료</span></div>
+        </div>
       </div>
-      <div class="code"><div class="lbl">픽업코드</div><div class="v">WSS-4821</div></div>
-    </a>
+    </div>
   </section>
 
   <!-- 찜한 보틀 -->
@@ -75,11 +87,11 @@
 
   <!-- 메뉴 -->
   <section class="sec sec--tight">
-    <div class="mrow">주문 · 픽업 내역<span class="r">3건</span></div>
-    <div class="mrow">재입고 알림<span class="r">2개</span></div>
-    <div class="mrow">알림 설정<span class="r"></span></div>
+    <a class="mrow" href="product/0001/">주문 · 픽업 내역<span class="r">3건</span></a>
+    <a class="mrow" href="product/0004/">재입고 알림<span class="r">2개</span></a>
+    <a class="mrow" href="product/0003/">알림 설정<span class="r"></span></a>
     <div class="mrow">본인인증 정보<span class="r">인증완료</span></div>
-    <div class="mrow">고객센터<span class="r"></span></div>
+    <a class="mrow" href="https://pf.kakao.com/_veluga/chat" target="_blank" rel="noopener">고객센터<span class="r">카카오 채널</span></a>
     <div class="mrow" style="color:var(--ink-48);">로그아웃<span class="r" style="font-size:0;"></span></div>
   </section>
 
