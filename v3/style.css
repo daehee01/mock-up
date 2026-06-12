@@ -1,0 +1,287 @@
+/* 벨루가 B2C v3 — 디자인: 루트 DESIGN.md(Apple 분석) 적용, 다크 모드 운용
+   (2026-06-12 오퍼레이터: "Exclusive 느낌으로 어두운 톤")
+   - DESIGN.md의 니어블랙 타일 스택(#272729/#2a2a2c/#252527)을 기본 캔버스로 승격,
+     마이크로 스텝 명도 차가 곧 섹션 구분선 (그라디언트·장식 금지 원칙 유지)
+   - 단일 액센트: 버튼은 Action Blue #0066cc(다크 위에서도 동작 — DESIGN.md),
+     텍스트·active 신호는 Sky Link Blue #2997ff(다크 전용 변형)
+   - 필 CTA(9999px) / 카드 18px + 1px 화이트 헤어라인 / 그림자는 보틀에만
+   - 보틀 이미지는 라이트 코스터(.cover #f5f5f7)에 얹음 — 흰 배경 PNG 대응 + 앨범아트 문법
+   - 폰트: SF Pro 대체 — 한글이라 Pretendard (DESIGN.md 대체 가이드 준용) */
+
+:root{
+  --blue:#0066cc; --blue-focus:#0071e3; --blue-dark:#2997ff;
+  --ink:#f5f5f7; --muted-80:#c7c7cc; --muted-48:#98989d;
+  --canvas:#161617; --tile:#272729; --tile-2:#2a2a2c; --tile-3:#252527;
+  --black:#000; --coaster:#f5f5f7;
+  --hairline:rgba(255,255,255,.14); --divider:rgba(255,255,255,.08);
+  --r-sm:8px; --r-md:11px; --r-lg:18px; --r-pill:9999px;
+  --font:"Pretendard Variable",Pretendard,system-ui,-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);color:var(--ink);background:var(--canvas);
+  font-size:17px;line-height:1.47;letter-spacing:-.374px;
+  -webkit-font-smoothing:antialiased;}
+img{max-width:100%;display:block;}
+button{font-family:inherit;cursor:pointer;}
+a{text-decoration:none;color:inherit;}
+b{font-weight:600;}
+
+/* ---------- 글로벌 나브 — 트루블랙 44px ---------- */
+.gnav{position:sticky;top:0;z-index:50;height:44px;background:var(--black);
+  display:flex;align-items:center;justify-content:space-between;padding:0 20px;}
+.gnav .logo{color:#fff;font-size:17px;font-weight:700;letter-spacing:-.2px;}
+.gnav .logo b{color:var(--blue-dark);}
+.gnav nav{display:flex;gap:16px;}
+.gnav nav a{color:#fff;font-size:12px;letter-spacing:-.12px;opacity:.85;white-space:nowrap;}
+.gnav nav a:active{opacity:.6;}
+
+/* ---------- 페이지 골격 ---------- */
+.page{max-width:680px;margin:0 auto;padding-bottom:76px;}
+.sec{padding:28px 20px 8px;}
+.sec--first{padding-top:24px;}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:1.6px;color:var(--blue-dark);
+  text-transform:uppercase;margin-bottom:10px;}
+.row-head{display:flex;align-items:baseline;gap:8px;margin-bottom:14px;}
+.row-head h2{font-size:21px;font-weight:600;letter-spacing:-.374px;line-height:1.19;}
+.row-head .cnt{font-size:14px;color:var(--muted-48);font-weight:600;}
+
+/* ---------- 히어로 — 타일 마이크로 스텝 ---------- */
+.hero{background:var(--tile);color:var(--ink);text-align:center;
+  padding:56px 24px 48px;}
+.hero h1{font-size:34px;font-weight:600;line-height:1.12;letter-spacing:-.4px;}
+.hero .lead{font-size:17px;font-weight:300;line-height:1.5;letter-spacing:0;
+  color:var(--muted-80);max-width:440px;margin:14px auto 0;}
+.hero--sale{background:var(--tile-3);}
+
+/* 검색 — 필 인풋 (다크 위 라이트 필 = 스포티파이 검색 문법) */
+.searchbox{display:flex;align-items:center;gap:8px;background:var(--coaster);
+  border:0;border-radius:var(--r-pill);
+  padding:12px 20px;height:44px;max-width:420px;margin:24px auto 0;color:#7a7a7a;}
+.searchbox input{border:0;outline:0;flex:1;font:inherit;font-size:17px;
+  letter-spacing:-.374px;color:#1d1d1f;background:transparent;}
+.searchbox input::placeholder{color:#7a7a7a;}
+
+/* ---------- HOT 레일 — 스포티파이 카드 문법 ---------- */
+.rail{display:flex;gap:14px;overflow-x:auto;padding:2px 2px 18px;
+  scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;}
+.rail::-webkit-scrollbar{display:none;}
+.rcard{flex:0 0 180px;scroll-snap-align:start;background:var(--tile-2);
+  border:1px solid var(--hairline);border-radius:var(--r-lg);padding:20px 16px;
+  transition:transform .15s ease;}
+.rcard:active{transform:scale(.95);}
+.rcard .nm{font-size:17px;font-weight:600;letter-spacing:-.374px;margin-top:14px;}
+.rcard .ds{font-size:14px;color:var(--muted-80);letter-spacing:-.224px;
+  line-height:1.43;margin-top:4px;min-height:40px;}
+.rcard .mt{font-size:12px;color:var(--muted-48);margin-top:10px;}
+
+/* 아바타 — 이모지 원형(외부 프로필 이미지 추측 금지) */
+.ava{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:20px;color:#fff;flex-shrink:0;}
+.ava.lg{width:64px;height:64px;font-size:30px;}
+.ava.xl{width:96px;height:96px;font-size:46px;margin:0 auto 18px;
+  box-shadow:rgba(0,0,0,.4) 0 8px 30px;}
+
+/* ---------- 인플루언서 행 ---------- */
+.irow{display:flex;align-items:center;gap:12px;padding:12px 0;
+  border-bottom:1px solid var(--divider);}
+.irow .go{display:flex;align-items:center;gap:12px;flex:1;min-width:0;}
+.irow .hd{font-size:17px;font-weight:600;letter-spacing:-.374px;}
+.irow .sub{font-size:14px;color:var(--muted-48);letter-spacing:-.224px;}
+
+/* 팔로우 — 블루 필 (유일한 액센트) */
+.follow{background:var(--blue);color:#fff;border:0;border-radius:var(--r-pill);
+  font-size:14px;font-weight:600;letter-spacing:-.224px;padding:8px 18px;
+  transition:transform .15s ease;}
+.follow:active{transform:scale(.95);}
+.follow:focus-visible{outline:2px solid var(--blue-focus);outline-offset:2px;}
+.follow.on{background:transparent;color:var(--blue-dark);border:1px solid var(--blue-dark);}
+.follow.on::before{content:"✓ ";}
+.follow.sm{padding:7px 14px;}
+.artist .follow{margin-top:18px;padding:11px 28px;font-size:17px;}
+
+/* ---------- 빈 상태 ---------- */
+.empty{border:1px dashed var(--hairline);border-radius:var(--r-lg);
+  padding:26px 20px;text-align:center;font-size:15px;font-weight:600;
+  color:var(--muted-80);letter-spacing:-.224px;margin-bottom:6px;}
+.empty span{display:block;margin-top:4px;font-size:14px;font-weight:400;
+  color:var(--muted-48);}
+
+/* ---------- 신뢰 밴드 — 타일 ---------- */
+.band{background:var(--tile);padding:40px 24px;margin-top:32px;}
+.trust{display:flex;justify-content:center;gap:36px;text-align:center;}
+.trust .i b{display:block;font-size:28px;font-weight:600;letter-spacing:-.28px;}
+.trust .i span{font-size:13px;color:var(--muted-80);}
+
+/* ---------- 법 고지 박스 ---------- */
+.law{background:var(--tile-2);border-radius:var(--r-md);padding:14px 16px;
+  font-size:14px;line-height:1.5;letter-spacing:-.224px;color:var(--muted-80);
+  margin:18px 0 14px;}
+.law.on-dark{background:var(--tile-3);max-width:460px;margin:24px auto 0;}
+.law b{font-weight:600;color:var(--ink);}
+
+/* ---------- 큐레이터 상세 — 아티스트 헤더(타일) ---------- */
+.artist{background:var(--tile);text-align:center;padding:44px 24px 40px;}
+.artist h1{font-size:40px;font-weight:600;line-height:1.1;letter-spacing:-.4px;}
+.artist .sub{font-size:14px;color:var(--muted-80);margin-top:6px;}
+.chips{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap;}
+.chip{font-size:13px;letter-spacing:-.12px;padding:6px 14px;
+  border-radius:var(--r-pill);background:var(--tile-2);color:var(--muted-80);
+  border:1px solid var(--hairline);}
+
+.bio{font-size:17px;line-height:1.6;color:var(--muted-80);}
+.quote{background:var(--tile-2);border-radius:var(--r-lg);padding:20px;margin-top:16px;}
+.quote .by{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;
+  letter-spacing:-.224px;color:var(--muted-80);margin-bottom:10px;}
+.quote .by .ava{width:28px;height:28px;font-size:14px;}
+.quote p{font-size:17px;line-height:1.55;}
+
+/* ---------- 보틀 코스터 — 라이트 표면 위 보틀 (앨범아트 문법) ---------- */
+.cover{width:64px;height:80px;flex-shrink:0;background:var(--coaster);
+  border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;
+  padding:6px;}
+.cover img{max-height:100%;object-fit:contain;
+  filter:drop-shadow(2px 4px 8px rgba(0,0,0,.25));}
+.cover.sm{width:48px;height:62px;padding:4px;}
+
+/* ---------- PICK — 트랙리스트 (스포티파이 행 문법) ---------- */
+.tracklist{border-top:1px solid var(--divider);}
+.track{display:flex;align-items:center;gap:14px;padding:16px 0;
+  border-bottom:1px solid var(--divider);cursor:pointer;
+  transition:transform .15s ease;}
+.track:active{transform:scale(.98);}
+.track .no{font-size:14px;color:var(--muted-48);width:22px;text-align:center;
+  font-variant-numeric:tabular-nums;flex-shrink:0;}
+.track .ti{flex:1;min-width:0;}
+.track .nm{font-size:17px;font-weight:600;letter-spacing:-.374px;}
+.track .mt{font-size:13px;color:var(--muted-48);letter-spacing:-.12px;margin-top:2px;}
+.track .cmt{font-size:14px;color:var(--muted-80);letter-spacing:-.224px;
+  line-height:1.43;margin-top:6px;}
+.track .cmt.reason{color:var(--blue-dark);font-weight:600;}
+.track .tr{text-align:right;flex-shrink:0;}
+.track .price{font-size:15px;font-weight:600;letter-spacing:-.224px;white-space:nowrap;}
+.track .price .off{color:var(--blue-dark);}
+.track .price .was{font-size:13px;font-weight:400;color:var(--muted-48);
+  text-decoration:line-through;display:block;}
+.track .acts{display:flex;gap:8px;justify-content:flex-end;align-items:center;
+  margin-top:8px;}
+.track .buy{background:var(--blue);color:#fff;border:0;
+  border-radius:var(--r-pill);font-size:14px;font-weight:600;padding:7px 16px;
+  transition:transform .15s ease;}
+.track .buy:active{transform:scale(.95);}
+.track .save{width:32px;height:32px;border-radius:50%;background:transparent;
+  border:1px solid var(--hairline);color:var(--muted-80);font-size:15px;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .15s ease;}
+.track .save:active{transform:scale(.9);}
+.track .save.on{color:var(--blue-dark);border-color:var(--blue-dark);}
+
+/* ---------- 마이 ---------- */
+.prof{display:flex;align-items:center;gap:14px;}
+.prof .nm{font-size:21px;font-weight:600;letter-spacing:-.374px;}
+.prof .sub{font-size:14px;color:var(--muted-48);}
+.ordercard{border:1px solid var(--hairline);border-radius:var(--r-lg);
+  background:var(--tile-2);padding:14px 16px;margin-bottom:10px;
+  display:flex;gap:14px;align-items:center;}
+.ordercard .t{font-size:15px;font-weight:600;letter-spacing:-.224px;}
+.ordercard .d{font-size:13px;color:var(--muted-48);margin-top:2px;}
+.ordercard .code{margin-left:auto;text-align:right;flex-shrink:0;}
+.ordercard .code .lbl{font-size:11px;color:var(--muted-48);}
+.ordercard .code .v{font-size:15px;font-weight:700;color:var(--blue-dark);
+  font-variant-numeric:tabular-nums;}
+.mrow{display:flex;justify-content:space-between;align-items:center;
+  padding:15px 0;border-bottom:1px solid var(--divider);font-size:17px;
+  letter-spacing:-.374px;cursor:pointer;}
+.mrow .r::after{content:"›";color:var(--muted-48);font-size:18px;}
+.mrow .warn{color:#ff6b5e;}
+
+/* ---------- 하단 탭바 — 다크 프로스티드 ---------- */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:50;height:60px;
+  display:flex;background:rgba(22,22,23,.82);
+  backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-top:1px solid var(--divider);
+  padding-bottom:env(safe-area-inset-bottom);}
+.tabbar a{flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:3px;font-size:11px;letter-spacing:-.12px;
+  color:var(--muted-48);}
+.tabbar a.on{color:var(--blue-dark);}
+.tabbar a:active{transform:scale(.95);}
+
+/* ---------- 결제 시트 — Toss 플로우 × 다크 표면 ---------- */
+.pay-overlay{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.6);
+  display:none;align-items:flex-end;justify-content:center;}
+.pay-overlay.open{display:flex;animation:fade .2s ease;}
+.pay-sheet{background:var(--tile);width:100%;max-width:680px;max-height:88vh;
+  border-radius:var(--r-lg) var(--r-lg) 0 0;display:flex;flex-direction:column;
+  animation:slideup .25s ease;}
+.pay-grab{width:36px;height:4px;border-radius:2px;background:var(--hairline);
+  margin:10px auto 0;}
+.pay-head{display:flex;justify-content:space-between;align-items:center;
+  padding:12px 20px 10px;font-size:17px;font-weight:600;letter-spacing:-.374px;}
+.pay-x{background:none;border:0;font-size:16px;color:var(--muted-48);}
+.pay-scroll{overflow-y:auto;padding:0 20px 16px;}
+.pay-order{display:flex;align-items:center;gap:14px;background:var(--tile-2);
+  border-radius:var(--r-md);padding:14px;}
+.pay-order img{width:40px;height:56px;object-fit:contain;background:var(--coaster);
+  border-radius:6px;padding:3px;}
+.pay-order-info .t{font-size:15px;font-weight:600;letter-spacing:-.224px;}
+.pay-order-info .d{font-size:13px;color:var(--muted-48);}
+.pay-order-amt{margin-left:auto;font-size:17px;font-weight:700;white-space:nowrap;}
+.pay-sec{font-size:14px;font-weight:600;letter-spacing:-.224px;margin:18px 0 8px;}
+.pay-sec small{font-weight:400;color:var(--muted-48);}
+.pay-store{border:1px solid var(--hairline);border-radius:var(--r-md);overflow:hidden;}
+.pay-store .ps{display:flex;gap:10px;align-items:center;padding:12px 14px;
+  border-bottom:1px solid var(--divider);font-size:15px;letter-spacing:-.224px;cursor:pointer;}
+.pay-store .ps:last-child{border-bottom:0;}
+.pay-store .ps input{accent-color:var(--blue);}
+.pay-store .ps .d{font-size:13px;color:var(--muted-48);}
+.pay-easy{display:flex;gap:8px;}
+.pay-easy .easy{flex:1;border:1px solid var(--hairline);background:transparent;
+  border-radius:var(--r-md);padding:12px 0;font-size:14px;font-weight:600;
+  letter-spacing:-.224px;color:var(--muted-80);}
+.pay-easy .easy.sel{border:2px solid var(--blue-dark);color:var(--blue-dark);}
+.pay-agree-all{display:flex;gap:8px;align-items:center;font-size:15px;
+  font-weight:600;letter-spacing:-.224px;margin:18px 0 8px;cursor:pointer;}
+.pay-agree-sub{display:flex;flex-direction:column;gap:6px;}
+.pay-agree-sub label{display:flex;gap:8px;align-items:center;font-size:13px;
+  color:var(--muted-80);letter-spacing:-.12px;cursor:pointer;}
+.pay-agree-all input,.pay-agree-sub input{accent-color:var(--blue);}
+.pay-foot{padding:12px 20px calc(14px + env(safe-area-inset-bottom));
+  border-top:1px solid var(--divider);}
+.pay-cta{width:100%;background:var(--blue);color:#fff;border:0;
+  border-radius:var(--r-pill);font-size:18px;font-weight:300;letter-spacing:0;
+  padding:14px 0;transition:transform .15s ease;}
+.pay-cta:active{transform:scale(.97);}
+@keyframes slideup{from{transform:translateY(40px);opacity:.6}to{transform:none;opacity:1}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+/* ---------- 토스트 — 다크 위 라이트 ---------- */
+.toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%) translateY(8px);
+  background:var(--coaster);color:#1d1d1f;font-size:14px;letter-spacing:-.224px;
+  padding:11px 20px;border-radius:var(--r-pill);opacity:0;pointer-events:none;
+  transition:opacity .25s ease,transform .25s ease;z-index:120;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ---------- 푸터 — 트루블랙 ---------- */
+.ft{background:var(--black);padding:36px 24px 40px;text-align:center;
+  font-size:14px;color:var(--muted-80);letter-spacing:-.224px;margin-top:36px;}
+.ft .fl{font-size:17px;font-weight:700;margin-bottom:6px;color:#fff;}
+.ft .fl b{color:var(--blue-dark);}
+.ftnav{display:flex;justify-content:center;gap:18px;margin-top:14px;}
+.ftnav a{font-size:13px;color:var(--muted-80);letter-spacing:-.12px;}
+.ftnav a:active{color:#fff;}
+.ft .legal{margin-top:14px;font-size:12px;line-height:1.6;color:var(--muted-48);
+  letter-spacing:-.12px;}
+.age{display:inline-block;border:1px solid var(--muted-48);border-radius:4px;
+  padding:0 5px;font-size:11px;font-weight:700;margin-right:4px;}
+
+/* ---------- 모션 최소화 ---------- */
+@media (prefers-reduced-motion: reduce){
+  *{animation:none!important;transition:none!important;}
+}
+
+/* ---------- 반응형 ---------- */
+@media (min-width:640px){
+  .hero h1{font-size:40px;}
+  .rail{flex-wrap:nowrap;}
+}

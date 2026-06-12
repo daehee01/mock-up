@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>마이 — 벨루가</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<link rel="stylesheet" href="style.css?v=1" />
+</head>
+<body>
+  <header class="gnav">
+    <a href="index.html" class="logo">벨루<b>가</b></a>
+    <nav>
+      <a href="sale.html">상설할인</a>
+      <a href="library.html">내 라이브러리</a>
+      <a href="mypage.html">마이</a>
+    </nav>
+  </header>
+<main class="page">
+  <section class="sec sec--first">
+    <div class="prof">
+      <span class="ava lg" style="background:#000;">🐳</span>
+      <div>
+        <div class="nm">벨루가 회원님</div>
+        <div class="sub">010-****-1234 · 성인 인증 완료 ✓</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="row-head"><h2>주문 · 픽업</h2></div>
+    <div id="my-orders"></div>
+    <div id="my-orders-empty" class="empty" style="display:none">
+      아직 주문이 없어요.<br/><span>큐레이터 PICK에서 첫 보틀을 골라보세요.</span>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="mrow" onclick="location.href='library.html'"><div>내 라이브러리</div><div class="r"></div></div>
+    <div class="mrow"><div>재입고 · 오픈 알림</div><div class="r"></div></div>
+    <div class="mrow"><div>알림 설정</div><div class="r"></div></div>
+    <div class="mrow" onclick="alert('카카오 채널 데모 — 실서비스에서 연결됩니다.')"><div>고객센터 (카카오 채널)</div><div class="r"></div></div>
+    <div class="mrow" onclick="VLG3.resetDemo()"><div class="warn">데모 데이터 초기화</div><div class="r"></div></div>
+  </section>
+
+  <footer class="ft">
+    <div class="fl">벨루<b>가</b></div>
+    <div>인플루언서가 말아주는 익스클루시브 술 큐레이션</div>
+    <nav class="ftnav">
+      <a href="index.html">홈</a><a href="sale.html">상설할인</a><a href="library.html">내 라이브러리</a><a href="mypage.html">마이</a>
+    </nav>
+    <div class="legal"><span class="age">19+</span> 주류는 만 19세 이상만 구매·픽업할 수 있습니다.<br/>
+    (주)벨루가 · 사업자/통신판매업/주류통신판매 승인 정보 (확정 후 기재)<br/>
+    본 페이지는 데모 목업입니다 — 가격·팔로워 수·코멘트는 가상이며 인플루언서와의 제휴는 체결 전입니다.</div>
+  </footer>
+</main>
+  <nav class="tabbar">
+    <a href="index.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg><span>홈</span></a>
+    <a href="sale.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 5 5 19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg><span>상설할인</span></a>
+    <a href="library.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3v18"/><path d="M9 3v18"/><path d="m14 4 5 17"/></svg><span>내 라이브러리</span></a>
+    <a href="mypage.html" class="on"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span>마이</span></a>
+  </nav>
+<div class="toast" id="toast"></div>
+<script src="app.js?v=1"></script>
+  <script>
+    VLG3.renderMypage();
+  </script>
+</body>
+</html>
