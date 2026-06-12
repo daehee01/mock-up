@@ -275,6 +275,74 @@ b{font-weight:600;}
 .age{display:inline-block;border:1px solid var(--muted-48);border-radius:4px;
   padding:0 5px;font-size:11px;font-weight:700;margin-right:4px;}
 
+/* ---------- 글로벌 나브 — 장바구니 아이콘 ---------- */
+.gnav .cartico{position:relative;display:flex;align-items:center;}
+.cartbadge{position:absolute;top:-7px;right:-9px;min-width:15px;height:15px;
+  border-radius:var(--r-pill);background:var(--blue);color:#fff;font-size:10px;
+  font-weight:700;display:flex;align-items:center;justify-content:center;
+  padding:0 4px;}
+
+/* ---------- 한정판 이벤트 카드 ---------- */
+.evcard{display:flex;gap:14px;align-items:center;background:var(--tile-2);
+  border:1px solid var(--hairline);border-radius:var(--r-lg);padding:16px;
+  margin-bottom:10px;cursor:pointer;transition:transform .15s ease;}
+.evcard:active{transform:scale(.98);}
+.evcard .ei{flex:1;min-width:0;}
+.evcard .top{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.evcard .who{font-size:13px;color:var(--muted-48);letter-spacing:-.12px;}
+.evcard .nm{font-size:17px;font-weight:600;letter-spacing:-.374px;}
+.evcard .ends{font-size:13px;color:var(--muted-48);letter-spacing:-.12px;margin-top:6px;}
+.evcard .ends.ok{color:var(--muted-80);}
+.mech{font-size:11px;font-weight:700;letter-spacing:.2px;padding:3px 9px;
+  border-radius:var(--r-pill);background:var(--blue);color:#fff;}
+.mech.soon{background:transparent;border:1px dashed var(--hairline);
+  color:var(--muted-80);}
+.mech.out{background:transparent;border:1px solid var(--hairline);
+  color:var(--muted-48);}
+.evcard.up{border-style:dashed;background:transparent;}
+.evcard.end{opacity:.75;background:transparent;}
+.cover.dim img{filter:grayscale(.6) drop-shadow(2px 4px 8px rgba(0,0,0,.25));}
+.notify{flex-shrink:0;background:transparent;border:1px solid var(--blue-dark);
+  color:var(--blue-dark);border-radius:var(--r-pill);font-size:13px;font-weight:600;
+  padding:8px 14px;transition:transform .15s ease;}
+.notify:active{transform:scale(.95);}
+
+/* 진행 바 — crowd 차오름 / preorder·stock 소진 (단일 블루) */
+.bar{margin-top:8px;}
+.bar .track-bg{height:6px;border-radius:3px;background:rgba(255,255,255,.12);
+  overflow:hidden;}
+.bar .fill{height:100%;border-radius:3px;background:var(--blue-dark);}
+.bar .lbl{display:flex;justify-content:space-between;font-size:12px;
+  color:var(--muted-48);letter-spacing:-.12px;margin-top:5px;}
+.bar .lbl b{color:var(--ink);font-weight:600;}
+
+/* ---------- 장바구니 ---------- */
+.track.nopay{cursor:default;}
+.track.nopay:active{transform:none;}
+.qty{display:inline-flex;align-items:center;gap:12px;margin-top:8px;
+  border:1px solid var(--hairline);border-radius:var(--r-pill);padding:4px 10px;}
+.qty button{background:none;border:0;color:var(--blue-dark);font-size:16px;
+  font-weight:700;width:20px;}
+.qty span{font-size:14px;font-weight:600;min-width:16px;text-align:center;
+  font-variant-numeric:tabular-nums;}
+.total{display:flex;justify-content:space-between;align-items:baseline;
+  font-size:17px;letter-spacing:-.374px;padding:14px 2px;}
+.total b{font-size:24px;font-weight:700;letter-spacing:-.28px;}
+.checkout{width:100%;background:var(--blue);color:#fff;border:0;
+  border-radius:var(--r-pill);font-size:18px;font-weight:300;letter-spacing:0;
+  padding:14px 0;transition:transform .15s ease;}
+.checkout:active{transform:scale(.97);}
+
+/* ---------- About — 픽업 스텝 ---------- */
+.steps{display:flex;flex-direction:column;gap:14px;}
+.step{display:flex;gap:14px;align-items:flex-start;font-size:15px;
+  letter-spacing:-.224px;color:var(--muted-80);line-height:1.5;}
+.step b{color:var(--ink);}
+.step .n{width:28px;height:28px;border-radius:50%;background:var(--tile-2);
+  border:1px solid var(--hairline);color:var(--blue-dark);font-size:14px;
+  font-weight:700;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;}
+
 /* ---------- 모션 최소화 ---------- */
 @media (prefers-reduced-motion: reduce){
   *{animation:none!important;transition:none!important;}

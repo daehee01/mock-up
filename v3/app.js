@@ -1,10 +1,12 @@
-// 벨루가 B2C v3 — 공용 스크립트 (팔로우 · 라이브러리 저장 · 검색 · 결제 시트 · 마이)
-// localStorage 키는 v1/v2와 분리: vlg3_follow / vlg3_lib / vlg3_orders
+// 벨루가 B2C v3 — 공용 스크립트 (팔로우 · 라이브러리 · 장바구니 · 검색 · 결제 시트)
+// localStorage 키는 v1/v2와 분리: vlg3_follow / vlg3_lib / vlg3_cart / vlg3_orders
 var VLG3 = (function () {
-  var FKEY = 'vlg3_follow', LKEY = 'vlg3_lib', OKEY = 'vlg3_orders';
+  var FKEY = 'vlg3_follow', LKEY = 'vlg3_lib', CKEY = 'vlg3_cart', OKEY = 'vlg3_orders';
 
   function read(k) { try { return JSON.parse(localStorage.getItem(k)) || []; } catch (e) { return []; } }
   function save(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+  function won(n) { return n.toLocaleString('ko-KR') + '원'; }
+  function priceNum(s) { return parseInt(String(s).replace(/[^0-9]/g, ''), 10) || 0; }
 
   // ---- 팔로우 ----
   function follows() { return read(FKEY); }
@@ -35,11 +37,22 @@ var VLG3 = (function () {
       if (em) em.style.display = any ? 'none' : '';
     }
     syncSaves();
+    badge();
   }
 
   // ---- 라이브러리 (저장한 보틀) ----
   function lib() { return read(LKEY); }
   function inLib(code) { return lib().some(function (b) { return b.code === code; }); }
+
+  function itemFrom(el) {
+    return {
+      code: el.getAttribute('data-code'),
+      name: el.getAttribute('data-name'),
+      img: el.getAttribute('data-img'),
+      price: el.getAttribute('data-price'),
+      vol: el.getAttribute('data-vol')
+    };
+  }
 
   function toggleLib(btn) {
     var t = btn.closest('.track');
@@ -47,16 +60,7 @@ var VLG3 = (function () {
     var code = t.getAttribute('data-code');
     var a = lib(), idx = a.findIndex(function (b) { return b.code === code; });
     if (idx >= 0) { a.splice(idx, 1); toast('라이브러리에서 뺐어요'); }
-    else {
-      a.unshift({
-        code: code,
-        name: t.getAttribute('data-name'),
-        img: t.getAttribute('data-img'),
-        price: t.getAttribute('data-price'),
-        vol: t.getAttribute('data-vol')
-      });
-      toast('라이브러리에 저장했어요 ♥');
-    }
+    else { a.unshift(itemFrom(t)); toast('라이브러리에 저장했어요 ♥'); }
     save(LKEY, a); syncSaves();
   }
 
@@ -67,6 +71,134 @@ var VLG3 = (function () {
       b.classList.toggle('on', !!on);
       b.textContent = on ? '♥' : '♡';
     });
+  }
+
+  // ---- 장바구니 ----
+  function cart() { return read(CKEY); }
+  function cartCount() { return cart().reduce(function (s, c) { return s + c.qty; }, 0); }
+
+  function badge() {
+    var n = cartCount();
+    document.querySelectorAll('[data-cart-badge]').forEach(function (b) {
+      b.textContent = n;
+      b.style.display = n ? '' : 'none';
+    });
+  }
+
+  function addCart(btn) {
+    var t = btn.closest('.track');
+    if (!t) return;
+    var it = itemFrom(t), a = cart();
+    var hit = a.find(function (c) { return c.code === it.code; });
+    if (hit) hit.qty += 1; else { it.qty = 1; a.push(it); }
+    save(CKEY, a); badge();
+    toast('장바구니에 담았어요 (' + cartCount() + ')');
+  }
+
+  function qty(code, d) {
+    var a = cart();
+    var hit = a.find(function (c) { return c.code === code; });
+    if (!hit) return;
+    hit.qty += d;
+    if (hit.qty < 1) hit.qty = 1;
+    save(CKEY, a); renderCart();
+  }
+
+  function removeItem(code) {
+    save(CKEY, cart().filter(function (c) { return c.code !== code; }));
+    renderCart(); toast('장바구니에서 뺐어요');
+  }
+
+  function cartTotal() {
+    return cart().reduce(function (s, c) { return s + priceNum(c.price) * c.qty; }, 0);
+  }
+
+  function renderCart() {
+    var w = document.getElementById('cart-list');
+    if (!w) { badge(); return; }
+    var a = cart();
+    w.innerHTML = a.map(function (c) {
+      return '<div class="track nopay">' +
+        '<span class="cover"><img src="' + c.img + '" alt="" /></span>' +
+        '<div class="ti"><div class="nm">' + c.name + '</div><div class="mt">' + c.vol + ' · ' + c.price + '</div>' +
+        '<div class="qty"><button type="button" onclick="VLG3.qty(\'' + c.code + '\',-1)">−</button>' +
+        '<span>' + c.qty + '</span>' +
+        '<button type="button" onclick="VLG3.qty(\'' + c.code + '\',1)">+</button></div></div>' +
+        '<div class="tr"><div class="price"><span class="now">' + won(priceNum(c.price) * c.qty) + '</span></div>' +
+        '<div class="acts"><button type="button" class="save" aria-label="삭제" onclick="VLG3.removeItem(\'' + c.code + '\')">✕</button></div></div>' +
+        '</div>';
+    }).join('');
+    document.getElementById('cart-empty').style.display = a.length ? 'none' : '';
+    document.getElementById('cart-foot').style.display = a.length ? '' : 'none';
+    var cnt = document.getElementById('cart-cnt');
+    if (cnt) cnt.textContent = a.length ? cartCount() + '병' : '';
+    var tot = document.getElementById('cart-total');
+    if (tot) tot.textContent = won(cartTotal());
+    badge();
+  }
+
+  // ---- 결제 시트 (단건 / 장바구니 공용) ----
+  var cur = null;
+
+  function fillPay(img, name, vol, price) {
+    document.getElementById('pay-img').src = img;
+    document.getElementById('pay-name').textContent = name;
+    document.getElementById('pay-vol').textContent = vol;
+    document.getElementById('pay-price').textContent = price;
+    document.getElementById('pay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function openPay(el) {
+    cur = itemFrom(el); cur.mode = 'single';
+    fillPay(cur.img, cur.name, cur.vol + ' · 1병 · 매장 픽업', cur.price);
+  }
+
+  function checkoutCart() {
+    var a = cart();
+    if (!a.length) { toast('장바구니가 비어 있어요'); return; }
+    cur = { mode: 'cart' };
+    var name = a[0].name + (a.length > 1 ? ' 외 ' + (a.length - 1) + '건' : '');
+    fillPay(a[0].img, name, '총 ' + cartCount() + '병 · 매장 픽업', won(cartTotal()));
+  }
+
+  function closePay() {
+    document.getElementById('pay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function selEasy(btn) {
+    btn.parentElement.querySelectorAll('.easy').forEach(function (b) { b.classList.remove('sel'); });
+    btn.classList.add('sel');
+  }
+  function agreeAll(box) {
+    document.querySelectorAll('.pay-req').forEach(function (c) { c.checked = box.checked; });
+  }
+
+  function payNow() {
+    var all = Array.prototype.every.call(document.querySelectorAll('.pay-req'), function (c) { return c.checked; });
+    if (!all) { toast('필수 약관에 모두 동의해 주세요'); return; }
+    var store = (document.querySelector('input[name="pstore"]:checked') || {}).value || '강남점';
+    var code = 'VLG-' + String(Math.floor(1000 + Math.random() * 9000));
+    var os = read(OKEY);
+    if (cur && cur.mode === 'cart') {
+      cart().forEach(function (c) {
+        os.unshift({ code: c.code, name: c.name + (c.qty > 1 ? ' × ' + c.qty : ''), img: c.img,
+                     price: won(priceNum(c.price) * c.qty), store: store, pickup: code });
+      });
+      save(OKEY, os);
+      save(CKEY, []);
+      renderCart();
+    } else if (cur) {
+      os.unshift({ code: cur.code, name: cur.name, img: cur.img, price: cur.price, store: store, pickup: code });
+      save(OKEY, os);
+    }
+    closePay(); badge();
+    toast('결제 완료(데모) — 픽업 코드 ' + code);
+  }
+
+  // ---- 오픈 알림 (예정 이벤트) ----
+  function notify(title) {
+    toast('오픈 알림을 신청했어요 — ' + title);
   }
 
   // ---- 인플루언서 검색 (홈) ----
@@ -85,46 +217,6 @@ var VLG3 = (function () {
     if (em) em.style.display = any ? 'none' : '';
   }
 
-  // ---- 결제 시트 ----
-  var cur = null;
-  function openPay(el) {
-    cur = {
-      code: el.getAttribute('data-code'),
-      name: el.getAttribute('data-name'),
-      img: el.getAttribute('data-img'),
-      price: el.getAttribute('data-price'),
-      vol: el.getAttribute('data-vol')
-    };
-    document.getElementById('pay-img').src = cur.img;
-    document.getElementById('pay-name').textContent = cur.name;
-    document.getElementById('pay-vol').textContent = cur.vol + ' · 1병 · 매장 픽업';
-    document.getElementById('pay-price').textContent = cur.price;
-    document.getElementById('pay').classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-  function closePay() {
-    document.getElementById('pay').classList.remove('open');
-    document.body.style.overflow = '';
-  }
-  function selEasy(btn) {
-    btn.parentElement.querySelectorAll('.easy').forEach(function (b) { b.classList.remove('sel'); });
-    btn.classList.add('sel');
-  }
-  function agreeAll(box) {
-    document.querySelectorAll('.pay-req').forEach(function (c) { c.checked = box.checked; });
-  }
-  function payNow() {
-    var all = Array.prototype.every.call(document.querySelectorAll('.pay-req'), function (c) { return c.checked; });
-    if (!all) { toast('필수 약관에 모두 동의해 주세요'); return; }
-    var store = (document.querySelector('input[name="pstore"]:checked') || {}).value || '강남점';
-    var code = 'VLG-' + String(Math.floor(1000 + Math.random() * 9000));
-    var a = read(OKEY);
-    a.unshift({ code: cur.code, name: cur.name, img: cur.img, price: cur.price, store: store, pickup: code });
-    save(OKEY, a);
-    closePay();
-    toast('결제 완료(데모) — 픽업 코드 ' + code);
-  }
-
   // ---- 내 라이브러리 페이지 ----
   function trackRow(b) {
     return '<div class="track" data-code="' + b.code + '" data-name="' + b.name + '" data-img="' + b.img +
@@ -134,7 +226,7 @@ var VLG3 = (function () {
       '<div class="tr"><div class="price"><span class="now">' + b.price + '</span></div>' +
       '<div class="acts"><button type="button" class="save on" data-save aria-label="라이브러리에서 빼기" ' +
       'onclick="event.stopPropagation();VLG3.toggleLib(this);VLG3.renderLibrary(window.__infs||[])">♥</button>' +
-      '<button type="button" class="buy">구매</button></div></div></div>';
+      '<button type="button" class="buy" onclick="event.stopPropagation();VLG3.addCart(this)">담기</button></div></div></div>';
   }
 
   function renderLibrary(infs) {
@@ -175,7 +267,7 @@ var VLG3 = (function () {
   }
 
   function resetDemo() {
-    [FKEY, LKEY, OKEY].forEach(function (k) { localStorage.removeItem(k); });
+    [FKEY, LKEY, CKEY, OKEY].forEach(function (k) { localStorage.removeItem(k); });
     toast('데모 데이터를 초기화했어요'); sync();
     setTimeout(function () { location.reload(); }, 600);
   }
@@ -193,6 +285,8 @@ var VLG3 = (function () {
 
   sync();
   return { toggle: toggle, sync: sync, search: search, toggleLib: toggleLib,
+           addCart: addCart, qty: qty, removeItem: removeItem, renderCart: renderCart,
+           checkoutCart: checkoutCart, notify: notify,
            openPay: openPay, closePay: closePay, selEasy: selEasy, agreeAll: agreeAll,
            payNow: payNow, renderLibrary: renderLibrary, renderMypage: renderMypage,
            resetDemo: resetDemo };

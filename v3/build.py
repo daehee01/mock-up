@@ -15,7 +15,7 @@
 import os
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-VERSION = "1"  # 캐시버스팅 — 디자인 변경 시 +1
+VERSION = "2"  # 캐시버스팅 — 디자인 변경 시 +1
 
 FONT = ('<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />\n'
         '<link rel="stylesheet" as="style" crossorigin '
@@ -155,6 +155,94 @@ INFLUENCERS = [
 ]
 IMAP = {i["code"]: i for i in INFLUENCERS}
 
+# ---------------- EVENTS — 한정판 판매 이벤트 (인플루언서 종속) ----------------
+# mech: crowd(공동구매·달성률 bar) / preorder(예약·잔여 bar) / stock(선착순·잔여 bar)
+# status: live(진행 중) / upcoming(예정) / ended(마감 — SOLD OUT 아카이브)
+# 메인의 모든 이벤트 카드는 클릭 시 해당 인플루언서 페이지로 이동.
+EVENTS = [
+    {"id":"e1","inf":"chimchakman","pv":2962,"mech":"crowd","status":"live",
+     "title":"글렌알라키 12년 공동구매","goal":60,"sold":49,
+     "ends":"06.19(금) 20:00 마감","note":"60병 모이면 확정 매입 — 미달 시 전액 환불"},
+    {"id":"e2","inf":"jurakworld","pv":19904,"mech":"preorder","status":"live",
+     "title":"맥캘란 12년 셰리 오크 예약","alloc":40,"left":7,
+     "ends":"07.03 입고 — 입고 후 픽업","note":"국내 배정 40병 확정분"},
+    {"id":"e3","inf":"ppanibottle","pv":8019,"mech":"stock","status":"live",
+     "title":"라프로익 10년 선착순","total":30,"left":6,
+     "ends":"소진 시 종료 — 결제 즉시 픽업","note":"보유 재고 30병이 전부"},
+    {"id":"e4","inf":"sulsuno","status":"upcoming",
+     "title":"시크릿 하이볼 세트 공동구매","open_at":"06.20(토) 20:00 오픈",
+     "note":"오픈과 동시에 구성 공개 — 알림을 걸어두세요"},
+    {"id":"e5","inf":"newsulletter","status":"upcoming",
+     "title":"버번 리바이벌 컬렉션","open_at":"06.27(토) 20:00 오픈",
+     "note":"이번 주 뉴술레터에서 다룬 그 버번들"},
+    {"id":"e6","inf":"veluga","pv":31081,"status":"ended",
+     "title":"탐나불린 셰리 캐스크 단독 소싱","result":"30병 · 3시간 만에 완판"},
+    {"id":"e7","inf":"chimchakman","pv":5390,"status":"ended",
+     "title":"가쿠빈 하이볼 공동구매","result":"200병 · 이틀 만에 완판"},
+]
+MECH_LABEL = {"crowd": "공동구매", "preorder": "예약", "stock": "선착순"}
+
+
+def ev_bar(e):
+    """진행 바 — crowd: 차오름(달성률) / preorder·stock: 소진(잔여)."""
+    if e["mech"] == "crowd":
+        pct = round(e["sold"] / e["goal"] * 100)
+        lbl = f'<span><b>{e["sold"]}병</b> / 목표 {e["goal"]}병</span><span><b>{pct}%</b> 달성</span>'
+    else:
+        total = e.get("alloc") or e.get("total")
+        pct = round((total - e["left"]) / total * 100)
+        lbl = f'<span><b>{e["left"]}병 남음</b> / {total}병</span><span>{pct}% 소진</span>'
+    return f'''<div class="bar"><div class="track-bg"><div class="fill" style="width:{pct}%;"></div></div>
+        <div class="lbl">{lbl}</div></div>'''
+
+
+def ev_live_card(e, base, link=True):
+    """진행 중 이벤트 카드. link=True(메인) → 인플루언서 페이지로 /
+       link=False(인플루언서 페이지) → 행 클릭 = 결제 시트."""
+    p, i = PMAP[e["pv"]], IMAP[e["inf"]]
+    head = (f'<a class="evcard" href="{base}influencer/{i["code"]}/">' if link
+            else f'<div class="evcard" {pay_attrs(p)} onclick="VLG3.openPay(this)">')
+    tail = "</a>" if link else "</div>"
+    return f'''      {head}
+        <span class="cover"><img src="{p["img"]}" alt="" loading="lazy" /></span>
+        <div class="ei">
+          <div class="top"><span class="mech">{MECH_LABEL[e["mech"]]}</span><span class="who">{i["handle"]}</span></div>
+          <div class="nm">{e["title"]}</div>
+          {ev_bar(e)}
+          <div class="ends">⏳ {e["ends"]}</div>
+        </div>
+      {tail}'''
+
+
+def ev_upcoming_card(e, base, link=True):
+    i = IMAP[e["inf"]]
+    inner = f'''        <div class="ei">
+          <div class="top"><span class="mech soon">OPEN 예정</span><span class="who">{i["handle"]}</span></div>
+          <div class="nm">{e["title"]}</div>
+          <div class="ends">🕒 {e["open_at"]} — {e["note"]}</div>
+        </div>
+        <button type="button" class="notify" onclick="event.preventDefault();event.stopPropagation();VLG3.notify('{e["title"]}')">알림 받기</button>'''
+    if link:
+        return f'      <a class="evcard up" href="{base}influencer/{i["code"]}/">\n{inner}\n      </a>'
+    return f'      <div class="evcard up">\n{inner}\n      </div>'
+
+
+def ev_ended_card(e, base, link=True):
+    p, i = PMAP[e["pv"]], IMAP[e["inf"]]
+    inner = f'''        <span class="cover dim"><img src="{p["img"]}" alt="" loading="lazy" /></span>
+        <div class="ei">
+          <div class="top"><span class="mech out">SOLD OUT</span><span class="who">{i["handle"]}</span></div>
+          <div class="nm">{e["title"]}</div>
+          <div class="ends ok">✓ {e["result"]}</div>
+        </div>'''
+    if link:
+        return f'      <a class="evcard end" href="{base}influencer/{i["code"]}/">\n{inner}\n      </a>'
+    return f'      <div class="evcard end">\n{inner}\n      </div>'
+
+
+def events_of(code, status):
+    return [e for e in EVENTS if e["inf"] == code and e["status"] == status]
+
 
 # ---------------- 공통 조각 ----------------
 def gnav(base):
@@ -164,7 +252,9 @@ def gnav(base):
     <nav>
       <a href="{base}sale.html">상설할인</a>
       <a href="{base}library.html">내 라이브러리</a>
+      <a href="{base}about.html">About</a>
       <a href="{base}mypage.html">마이</a>
+      <a class="cartico" href="{base}cart.html" aria-label="장바구니"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span class="cartbadge" data-cart-badge style="display:none">0</span></a>
     </nav>
   </header>'''
 
@@ -194,7 +284,7 @@ def footer(base=""):
     <div class="fl">벨루<b>가</b></div>
     <div>인플루언서가 말아주는 익스클루시브 술 큐레이션</div>
     <nav class="ftnav">
-      <a href="{base}index.html">홈</a><a href="{base}sale.html">상설할인</a><a href="{base}library.html">내 라이브러리</a><a href="{base}mypage.html">마이</a>
+      <a href="{base}index.html">홈</a><a href="{base}sale.html">상설할인</a><a href="{base}library.html">내 라이브러리</a><a href="{base}about.html">About</a><a href="{base}mypage.html">마이</a>
     </nav>
     <div class="legal"><span class="age">19+</span> 주류는 만 19세 이상만 구매·픽업할 수 있습니다.<br/>
     (주)벨루가 · 사업자/통신판매업/주류통신판매 승인 정보 (확정 후 기재)<br/>
@@ -284,10 +374,12 @@ def pay_attrs(p, override=None):
 
 SAVE_BTN = ('<button type="button" class="save" data-save aria-label="라이브러리에 저장" '
             'onclick="event.stopPropagation();VLG3.toggleLib(this)">♡</button>')
+CART_BTN = ('<button type="button" class="buy" '
+            'onclick="event.stopPropagation();VLG3.addCart(this)">담기</button>')
 
 
 def track_row(n, pv, cmt, i):
-    """PICK = 스포티파이 트랙 행. 행 클릭 = 결제 모달, ♡ = 라이브러리 저장."""
+    """PICK = 스포티파이 트랙 행. 행 클릭 = 바로 결제, ♡ = 저장, 담기 = 장바구니."""
     p = PMAP[pv]
     return f'''      <div class="track" {pay_attrs(p)} onclick="VLG3.openPay(this)">
         <div class="no">{n:02d}</div>
@@ -299,7 +391,7 @@ def track_row(n, pv, cmt, i):
         </div>
         <div class="tr">
           <div class="price">{price_html(p)}</div>
-          <div class="acts">{SAVE_BTN}<button type="button" class="buy">구매</button></div>
+          <div class="acts">{SAVE_BTN}{CART_BTN}</div>
         </div>
       </div>'''
 
@@ -339,7 +431,8 @@ PAY_MODAL = '''  <div class="pay-overlay" id="pay" onclick="if(event.target===th
   </div>'''
 
 
-# ---------------- index.html (홈 — 큐레이션 피드) ----------------
+# ---------------- index.html (홈 — 이벤트 + 큐레이션 피드) ----------------
+# 브랜드 카피·신뢰 지표·법 고지는 about.html로 이전 (2026-06-12 오퍼레이터).
 def build_index():
     hot = [i for i in INFLUENCERS if i["hot"]]
     rest = [i for i in INFLUENCERS if not i["hot"]]
@@ -348,15 +441,20 @@ def build_index():
     follow_rows = "\n".join(inf_row(i, "", f'data-inf="{i["code"]}" style="display:none"') for i in INFLUENCERS)
     rec_rows = "\n".join(inf_row(i, "") for i in rest + hot)
 
-    body = f'''  <section class="hero">
-    <div class="eyebrow">EXCLUSIVE CURATION</div>
-    <h1>인플루언서가 말아주는<br/>익스클루시브 술 큐레이션.</h1>
-    <p class="lead">국내 유일의 주류 도매 유통 플랫폼이 데이터로 소싱한 술을,
-    믿고 보는 큐레이터가 직접 골라드립니다.</p>
+    live = "\n".join(ev_live_card(e, "") for e in EVENTS if e["status"] == "live")
+    upcoming = "\n".join(ev_upcoming_card(e, "") for e in EVENTS if e["status"] == "upcoming")
+    ended = "\n".join(ev_ended_card(e, "") for e in EVENTS if e["status"] == "ended")
+
+    body = f'''  <section class="sec sec--first">
     <div class="searchbox">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
       <input id="infq" type="text" placeholder="인플루언서 검색 (@핸들·주종)" oninput="VLG3.search(this.value)" />
     </div>
+  </section>
+
+  <section class="sec" id="sec-live">
+    <div class="row-head"><h2>🔴 진행 중인 한정판</h2></div>
+{live}
   </section>
 
   <section class="sec" id="sec-hot">
@@ -381,18 +479,58 @@ def build_index():
     <div id="inf-empty" class="empty" style="display:none">검색 결과가 없어요. 다른 키워드로 찾아보세요.</div>
   </section>
 
+  <section class="sec" id="sec-upcoming">
+    <div class="row-head"><h2>오픈 예정</h2></div>
+{upcoming}
+  </section>
+
+  <section class="sec" id="sec-ended">
+    <div class="row-head"><h2>지난 한정판 — 전부 완판</h2></div>
+{ended}
+  </section>
+
+{footer()}'''
+    return page("벨루가 — 인플루언서 술 큐레이션", body, base="", active="home")
+
+
+# ---------------- about.html (브랜드 — 메인에서 이전한 소개·신뢰·법 고지) ----------------
+def build_about():
+    body = f'''  <section class="hero">
+    <div class="eyebrow">EXCLUSIVE CURATION</div>
+    <h1>인플루언서가 말아주는<br/>익스클루시브 술 큐레이션.</h1>
+    <p class="lead">국내 유일의 주류 도매 유통 플랫폼이 데이터로 소싱한 술을,
+    믿고 보는 큐레이터가 직접 골라드립니다.</p>
+  </section>
+
+  <section class="sec">
+    <div class="row-head"><h2>벨루가는 어떻게 술을 구하나요</h2></div>
+    <p class="bio">벨루가는 전국 13,000개 매장의 주류 도매 거래가 오가는 <b>국내 유일의 주류 도매
+    유통 플랫폼</b>입니다. 23,000종이 넘는 SKU의 도매 거래 데이터를 AI로 분석하기 때문에,
+    어떤 보틀이 언제 어디서 풀리는지 가장 먼저 알고 직접 협상할 수 있습니다.
+    큐레이터의 안목과 벨루가의 데이터가 만나 — 다른 곳에 없는 술이 여기 모입니다.</p>
+  </section>
+
   <section class="band">
     <div class="trust">
       <div class="i"><b>13,000</b><span>매장 유통망</span></div>
       <div class="i"><b>23,000+</b><span>SKU 데이터</span></div>
       <div class="i"><b>AI</b><span>소싱 분석</span></div>
     </div>
-    <div class="law on-dark">📌 <b>왜 배송이 아니라 픽업인가요?</b> 주류는 법적으로 온라인 배송이 불가합니다(전통주 제외).
+  </section>
+
+  <section class="sec">
+    <div class="row-head"><h2>픽업은 이렇게</h2></div>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><div><b>온라인에서 결제</b><br/>큐레이터 PICK에서 고르고 픽업 매장을 선택해요.</div></div>
+      <div class="step"><div class="n">2</div><div><b>픽업 코드 발급</b><br/>결제 즉시 코드가 발급돼요. 입고 상품은 입고일 이후부터.</div></div>
+      <div class="step"><div class="n">3</div><div><b>매장에서 수령</b><br/>신분증으로 성인 인증 후 바로 받아가세요.</div></div>
+    </div>
+    <div class="law">📌 <b>왜 배송이 아니라 픽업인가요?</b> 주류는 법적으로 온라인 배송이 불가합니다(전통주 제외).
     온라인 결제 후 매장에서 받는 <b>스마트오더</b>가 합법적인 유일한 방법이에요. 픽업 시 성인 인증이 필요합니다.</div>
   </section>
 
 {footer()}'''
-    return page("벨루가 — 인플루언서 술 큐레이션", body, base="", active="home")
+    return page("About — 벨루가", body, base="", active="home")
 
 
 # ---------------- influencer/<code>/ (큐레이터 상세 — 아티스트 페이지) ----------------
@@ -401,6 +539,27 @@ def build_influencer(i):
     tracks = "\n".join(track_row(n + 1, pv, cmt, i) for n, (pv, cmt) in enumerate(i["picks"]))
     tags = "".join(f'<span class="chip">{t}</span>' for t in i["tags"])
 
+    # 이벤트 3단 — 진행 중(행 클릭=결제)·오픈 예정·지난 이벤트
+    live = events_of(i["code"], "live")
+    upcoming = events_of(i["code"], "upcoming")
+    ended = events_of(i["code"], "ended")
+    ev_html = ""
+    if live:
+        cards = "\n".join(ev_live_card(e, base, link=False) for e in live)
+        ev_html += f'''
+  <section class="sec">
+    <div class="row-head"><h2>🔴 진행 중인 한정판</h2></div>
+{cards}
+  </section>
+'''
+    if upcoming:
+        cards = "\n".join(ev_upcoming_card(e, base, link=False) for e in upcoming)
+        ev_html += f'''
+  <section class="sec">
+    <div class="row-head"><h2>오픈 예정</h2></div>
+{cards}
+  </section>
+'''
     body = f'''  <section class="artist">
     {ava(i, "xl")}
     <div class="eyebrow on-dark">CURATOR</div>
@@ -418,7 +577,7 @@ def build_influencer(i):
       <p>“{i["comment"]}”</p>
     </div>
   </section>
-
+{ev_html}
   <section class="sec">
     <div class="row-head"><h2>{i["name"]}의 PICK</h2><span class="cnt">{len(i["picks"])}</span></div>
     <div class="tracklist">
@@ -426,7 +585,12 @@ def build_influencer(i):
     </div>
     <div class="law">📌 결제 즉시 픽업 코드가 발급됩니다. 가까운 매장에서 <b>본인 확인(성인 인증)</b> 후 수령하세요.</div>
   </section>
-
+{f"""
+  <section class="sec">
+    <div class="row-head"><h2>지난 한정판 — 전부 완판</h2></div>
+{chr(10).join(ev_ended_card(e, base, link=False) for e in ended)}
+  </section>
+""" if ended else ""}
 {footer(base)}'''
     return page(f"{i['handle']} PICK — 벨루가", body, base=base, tail=PAY_MODAL, active="home")
 
@@ -447,7 +611,7 @@ def build_sale():
         </div>
         <div class="tr">
           <div class="price">{price_html(merged)}</div>
-          <div class="acts">{SAVE_BTN}<button type="button" class="buy">구매</button></div>
+          <div class="acts">{SAVE_BTN}{CART_BTN}</div>
         </div>
       </div>''')
     grid = "\n".join(rows)
@@ -510,6 +674,30 @@ def build_library():
     return page("내 라이브러리 — 벨루가", body, base="", tail=tail, active="lib")
 
 
+# ---------------- cart.html (장바구니 — 여러 상품 일괄 결제) ----------------
+def build_cart():
+    body = f'''  <section class="sec sec--first">
+    <div class="row-head"><h2>장바구니</h2><span class="cnt" id="cart-cnt"></span></div>
+    <div class="tracklist" id="cart-list"></div>
+    <div id="cart-empty" class="empty" style="display:none">
+      장바구니가 비어 있어요.<br/><span>큐레이터 PICK에서 "담기"를 누르면 여기에 모여요.</span>
+    </div>
+  </section>
+
+  <section class="sec" id="cart-foot" style="display:none">
+    <div class="total"><span>합계</span><b id="cart-total"></b></div>
+    <button type="button" class="checkout" onclick="VLG3.checkoutCart()">전체 결제하기</button>
+    <div class="law">📌 전 상품 <b>매장 픽업(스마트오더)</b>입니다. 픽업 매장은 결제 단계에서 선택해요.</div>
+  </section>
+
+{footer()}'''
+    tail = f'''{PAY_MODAL}
+  <script>
+    VLG3.renderCart();
+  </script>'''
+    return page("장바구니 — 벨루가", body, base="", tail=tail, active="home")
+
+
 # ---------------- mypage.html (마이 — 프로필·주문·설정) ----------------
 def build_mypage():
     body = f'''  <section class="sec sec--first">
@@ -557,8 +745,10 @@ def write(path, html):
 def main():
     print("벨루가 B2C v3 빌드 (뼈대 v4 — 인플루언서 큐레이션 / Apple 디자인 / 스포티파이 IA)")
     write("index.html", build_index())
+    write("about.html", build_about())
     write("sale.html", build_sale())
     write("library.html", build_library())
+    write("cart.html", build_cart())
     write("mypage.html", build_mypage())
     for i in INFLUENCERS:
         write(f"influencer/{i['code']}/index.html", build_influencer(i))

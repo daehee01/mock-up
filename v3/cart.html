@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>내 라이브러리 — 벨루가</title>
+<title>장바구니 — 벨루가</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <link rel="stylesheet" href="style.css?v=2" />
@@ -21,24 +21,17 @@
   </header>
 <main class="page">
   <section class="sec sec--first">
-    <div class="row-head"><h2>내 라이브러리</h2></div>
-    <p class="bio" style="margin-bottom:6px;">저장한 보틀과 팔로우한 큐레이터를 한곳에 모아드려요.</p>
-  </section>
-
-  <section class="sec">
-    <div class="row-head"><h2>저장한 보틀</h2><span class="cnt" id="lib-cnt"></span></div>
-    <div class="tracklist" id="lib-bottles"></div>
-    <div id="lib-bottles-empty" class="empty" style="display:none">
-      저장한 보틀이 없어요.<br/><span>PICK 목록에서 ♡를 누르면 여기에 모아드려요.</span>
+    <div class="row-head"><h2>장바구니</h2><span class="cnt" id="cart-cnt"></span></div>
+    <div class="tracklist" id="cart-list"></div>
+    <div id="cart-empty" class="empty" style="display:none">
+      장바구니가 비어 있어요.<br/><span>큐레이터 PICK에서 "담기"를 누르면 여기에 모여요.</span>
     </div>
   </section>
 
-  <section class="sec">
-    <div class="row-head"><h2>팔로우한 큐레이터</h2></div>
-    <div id="my-follows"></div>
-    <div id="my-follows-empty" class="empty" style="display:none">
-      팔로우한 큐레이터가 없어요.<br/><span>홈에서 마음에 드는 큐레이터를 팔로우해 보세요.</span>
-    </div>
+  <section class="sec" id="cart-foot" style="display:none">
+    <div class="total"><span>합계</span><b id="cart-total"></b></div>
+    <button type="button" class="checkout" onclick="VLG3.checkoutCart()">전체 결제하기</button>
+    <div class="law">📌 전 상품 <b>매장 픽업(스마트오더)</b>입니다. 픽업 매장은 결제 단계에서 선택해요.</div>
   </section>
 
   <footer class="ft">
@@ -53,9 +46,9 @@
   </footer>
 </main>
   <nav class="tabbar">
-    <a href="index.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg><span>홈</span></a>
+    <a href="index.html" class="on"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg><span>홈</span></a>
     <a href="sale.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 5 5 19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg><span>상설할인</span></a>
-    <a href="library.html" class="on"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3v18"/><path d="M9 3v18"/><path d="m14 4 5 17"/></svg><span>내 라이브러리</span></a>
+    <a href="library.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3v18"/><path d="M9 3v18"/><path d="m14 4 5 17"/></svg><span>내 라이브러리</span></a>
     <a href="mypage.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span>마이</span></a>
   </nav>
 <div class="toast" id="toast"></div>
@@ -94,7 +87,7 @@
     </div>
   </div>
   <script>
-    VLG3.renderLibrary([{"code": "chimchakman", "handle": "@침착맨", "tags": ["편안한 술", "예능"], "followers": "285만", "ava": "🧀", "col": "#3a3a3c"}, {"code": "ppanibottle", "handle": "@빠니보틀", "tags": ["여행", "로컬 술"], "followers": "198만", "ava": "🎒", "col": "#8a5a2b"}, {"code": "jurakworld", "handle": "@주락이월드", "tags": ["위스키 리뷰", "싱글몰트"], "followers": "34만", "ava": "🥃", "col": "#41643f"}, {"code": "sulsuno", "handle": "@술수노", "tags": ["꿀조합", "입문"], "followers": "42만", "ava": "🍸", "col": "#5b3a6e"}, {"code": "newsulletter", "handle": "@뉴술레터", "tags": ["트렌드", "뉴스레터"], "followers": "11만", "ava": "📮", "col": "#2f5d62"}, {"code": "veluga", "handle": "@벨루가", "tags": ["데이터 픽", "단독 소싱"], "followers": "공식", "ava": "🐳", "col": "#0066cc"}]);
+    VLG3.renderCart();
   </script>
 </body>
 </html>
