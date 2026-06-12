@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>벨루가 — 마이페이지</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<link rel="stylesheet" href="style.css?v=1" />
+<link rel="stylesheet" href="v2.css?v=1" />
+</head>
+<body>
+<div class="wrap">
+  <header class="hdr">
+    <a href="index.html" class="logo mark">벨루<b>가</b></a>
+    <nav class="nav">
+      <a href="products.html">전체상품</a>
+      <a href="wisinssa.html">위신싸</a>
+      <a href="about.html">About</a>
+      <a class="ico cart-ico" href="cart.html" aria-label="장바구니"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span class="cart-badge" data-cart-badge style="display:none">0</span></a>
+      <a class="ico" href="mypage.html" aria-label="마이페이지"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></a>
+    </nav>
+  </header>
+
+  <!-- 비회원(게스트) 뷰 -->
+  <div id="guestView" style="display:none;">
+    <div class="guest-hero">
+      <div class="avt"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+      <div class="gt">로그인하고<br /><b>벨루가 혜택</b>을 받아보세요.</div>
+      <div class="gd">비회원도 가격·이벤트는 자유롭게 둘러볼 수 있어요. 예약·픽업 코드 관리와 장바구니·결제는 회원만 이용할 수 있습니다.</div>
+      <a href="join.html" class="btn btn-primary">회원가입 →</a>
+      <a href="#" class="btn btn-ghost" id="loginBtn">이미 회원이에요 · 로그인(데모)</a>
+    </div>
+    <section class="sec sec--tight" style="padding-top:28px;">
+      <div class="guest-warn">🔞 <div><b>만 19세 이상</b>만 구매·픽업할 수 있어요. 결제·픽업 시 신분증으로 <b>성인 본인인증</b>을 거칩니다.</div></div>
+    </section>
+    <section class="sec sec--tight">
+      <a href="events/" class="btn btn-ghost" style="margin-bottom:10px;">진행 중 이벤트 보기 →</a>
+      <a href="products.html" class="btn btn-ghost">전체 상품 둘러보기 →</a>
+    </section>
+  </div>
+
+  <!-- 회원 뷰 -->
+  <div id="memberView">
+  <div class="prof">
+    <div class="avt">벨</div>
+    <div>
+      <div class="nm">위스키러버 님</div>
+      <div class="sub">010-••••-1234 · 일반 회원</div>
+    </div>
+  </div>
+
+  <!-- 진행 중 주문 — 공동 예약 (5단계: 예약·주문 → 목표 달성 → 입고 → 픽업 가능 → 완료) -->
+  <section class="sec sec--tight">
+    <div class="row-head"><div class="t">진행 중</div></div>
+    <div class="waitwrap" style="margin-bottom:13px;">
+      <a class="waitcard" href="events/0101/">
+        <img src="https://cdn.veluga.kr/drinks/pv/31081.png" alt="" />
+        <div>
+          <div class="t">탐나불린 18년 싱글 캐스크</div>
+          <div class="d">공동 예약 중 · 24/30병 달성 · 마감 6/19</div>
+        </div>
+        <div class="code"><div class="lbl">상태</div><div class="v" style="color:#9a6a14;">예약 중</div></div>
+      </a>
+      <div class="pickup-prog">
+        <div class="pp-track pp-5">
+          <div class="pp-fill" style="width:0%;"></div>
+          <div class="pp-step curr"><span class="pp-dot"></span><span class="pp-lbl">예약 완료</span></div>
+          <div class="pp-step"><span class="pp-dot"></span><span class="pp-lbl">목표 달성</span></div>
+          <div class="pp-step"><span class="pp-dot"></span><span class="pp-lbl">입고</span></div>
+          <div class="pp-step"><span class="pp-dot"></span><span class="pp-lbl">픽업 가능</span></div>
+          <div class="pp-step"><span class="pp-dot"></span><span class="pp-lbl">픽업 완료</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 선착순 주문 — 픽업 가능 -->
+    <div class="waitwrap">
+      <a class="waitcard" href="events/0103/">
+        <img src="https://cdn.veluga.kr/drinks/30879/pv/main/be6df03a84774220bdb94eac1f7089d5_%E1%84%90%E1%85%A1%E1%86%B7%E1%84%82%E1%85%A1%E1%84%87%E1%85%AE%E1%86%AF%E1%84%85%E1%85%B5%E1%86%AB_%E1%84%8C%E1%85%A5%E1%84%86%E1%85%A5%E1%86%AB_%E1%84%91%E1%85%B5%E1%84%82%E1%85%A9_%E1%84%82%E1%85%AE%E1%84%8B%E1%85%A1.png" alt="" />
+        <div>
+          <div class="t">탐나불린 피노 누아</div>
+          <div class="d">벨루가 픽업 · 강남점 · ~6/18까지</div>
+        </div>
+        <div class="code"><div class="lbl">픽업코드</div><div class="v">VLG-4821</div></div>
+      </a>
+      <div class="pickup-prog">
+        <div class="pp-track pp-5">
+          <div class="pp-fill" style="width:60%;"></div>
+          <div class="pp-step done"><span class="pp-dot"></span><span class="pp-lbl">주문</span></div>
+          <div class="pp-step done"><span class="pp-dot"></span><span class="pp-lbl">—</span></div>
+          <div class="pp-step done"><span class="pp-dot"></span><span class="pp-lbl">재고 확보</span></div>
+          <div class="pp-step curr"><span class="pp-dot"></span><span class="pp-lbl">픽업 가능</span></div>
+          <div class="pp-step"><span class="pp-dot"></span><span class="pp-lbl">픽업 완료</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 찜한 보틀 -->
+  <section class="sec sec--tight">
+    <div class="row-head"><div class="t">찜한 보틀</div><a class="more" href="products.html">전체 →</a></div>
+    <div class="carousel">
+      <a class="prod" href="events/0102/" data-name="탐나불린 21년 캐스크 스트렝스 고연산 사전 예약 얼로케이션" data-cat="위스키" data-lane="limited">
+        <span class="badge">사전 예약</span>
+        <img src="https://cdn.veluga.kr/drinks/pv/31253.png" alt="" />
+        <div class="nm">탐나불린 21년 캐스크 스트렝스</div>
+        <div class="meta">700mL · 57.1%</div>
+        <div class="price"><span class="now">329,000원</span></div>
+      </a>
+      <a class="prod" href="product/0003/" data-name="탐나불린 쇼비뇽 블랑 캐스크 화이트와인 여름 떨이 특가" data-cat="위스키" data-lane="wisinssa">
+        <span class="badge deal">31%</span>
+        <img src="https://cdn.veluga.kr/drinks/pv/31244.png" alt="" />
+        <div class="nm">탐나불린 쇼비뇽 블랑</div>
+        <div class="meta">700mL · 40%</div>
+        <div class="price"><span class="off">31%</span><span class="now">49,900원</span> <span class="was">72,000</span></div>
+      </a>
+      <a class="prod" href="product/0008/" data-name="탐나불린 셰리 더블 캐스크 2종 테이스팅 세트 비교" data-cat="위스키" data-lane="normal">
+        <span class="badge">테이스팅</span>
+        <img src="https://cdn.veluga.kr/drinks/pv/31081.png" alt="" />
+        <div class="nm">셰리·더블 2종 세트</div>
+        <div class="meta">700mL x 2 · 40%</div>
+        <div class="price"><span class="now">139,000원</span></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- 메뉴 -->
+  <section class="sec sec--tight">
+    <a class="mrow" href="events/0101/">주문 · 예약 내역<span class="r">3건</span></a>
+    <a class="mrow" href="events/">오픈 알림<span class="r">2개</span></a>
+    <a class="mrow" href="#">알림 설정<span class="r"></span></a>
+    <div class="mrow">본인인증 정보<span class="r">인증완료</span></div>
+    <a class="mrow" href="https://pf.kakao.com/_veluga/chat" target="_blank" rel="noopener">고객센터<span class="r">카카오 채널</span></a>
+    <a class="mrow" href="#" id="logoutBtn" style="color:var(--ink-48);">로그아웃<span class="r" style="font-size:0;"></span></a>
+  </section>
+  </div><!-- /memberView -->
+
+  <footer class="ft">
+    <div class="fl mark">벨루<b>가</b></div>
+    <div style="margin-bottom:4px;">구하기 어려운 술을, 동네 매장에서 — 벨루가 B2C</div>
+    <span class="age">19+ 청소년 보호</span>
+    <div>주류는 만 19세 이상만 구매·픽업할 수 있습니다.</div>
+    <div style="margin-top:10px;"><b>(주)벨루가</b> · 사업자/통신판매업/주류통신판매 승인 정보 (확정 후 기재)</div>
+  </footer>
+
+  <script>
+    (function () {
+      var guest = document.getElementById('guestView'), member = document.getElementById('memberView');
+      function render() {
+        var m = VLGCart.isMember();
+        guest.style.display = m ? 'none' : '';
+        member.style.display = m ? '' : 'none';
+      }
+      render();
+      var lo = document.getElementById('logoutBtn');
+      if (lo) lo.addEventListener('click', function (e) { e.preventDefault(); VLGCart.setMember(false); location.reload(); });
+      var li = document.getElementById('loginBtn');
+      if (li) li.addEventListener('click', function (e) { e.preventDefault(); VLGCart.setMember(true); location.reload(); });
+    })();
+  </script>
+</div>
+<script src="cart.js?v=1"></script>
+</body>
+</html>
