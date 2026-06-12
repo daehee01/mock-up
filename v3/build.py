@@ -11,7 +11,8 @@
 # 상품: vel.kr(api.veluga.kr) 실데이터 — pv_id·상품명·용량·이미지 URL은
 #   /drinks/pv/<id>/card/ 응답에서 가져와 전수 HTTP 200 검증함(추측 금지).
 #   가격은 API 미제공(B2B 견적제)이라 시중가 수준의 "목업 가격"임.
-# 인플루언서: 실명 채널 6곳 — 데모 목업 전용. 실서비스 전 초상권·계약 필수.
+# 인플루언서: 실존 채널 연상 패러디 네이밍(당황맨·뻐니보틀 등 — 리스크 회피, 벨루가만 실명).
+#   데모 목업 전용. 실서비스 전 실제 계약·실명 교체.
 import os
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -77,9 +78,10 @@ SALE = [
 ]
 
 # ---------------- INFLUENCERS — 1급 객체 (hot: 메인 HOT 레일 노출) ----------------
-# 실명 채널 — 데모 목업 전용(소개·코멘트·팔로워 수 전부 가상). 실서비스 전 계약 필수.
+# 패러디 네이밍(실존 채널 연상만, 실명 아님 — 벨루가 공식만 실명).
+# 소개·코멘트·팔로워 수 전부 가상. 실서비스 전 실제 계약 후 실명 교체.
 INFLUENCERS = [
-    {"code":"chimchakman","handle":"@침착맨","name":"침착맨","hot":True,
+    {"code":"danghwangman","handle":"@당황맨","name":"당황맨","hot":True,
      "ava":"🧀","col":"#3a3a3c","tags":["편안한 술","예능"],"followers":"285만",
      "oneliner":"술은 편하게 마시는 게 제일 맛있습니다.",
      "bio":"설명이 필요 없는 그 분. 어려운 위스키 용어 없이 '그냥 맛있는 술'을 골라드립니다. "
@@ -91,7 +93,7 @@ INFLUENCERS = [
         (3194,"이름이 와일드 터키인데 맛은 순합니다. 사람도 그런 사람 있잖아요."),
         (9215,"제일 많이 팔렸다는 건 제일 덜 망한다는 뜻입니다."),
      ]},
-    {"code":"ppanibottle","handle":"@빠니보틀","name":"빠니보틀","hot":True,
+    {"code":"ppeonibottle","handle":"@뻐니보틀","name":"뻐니보틀","hot":True,
      "ava":"🎒","col":"#8a5a2b","tags":["여행","로컬 술"],"followers":"198만",
      "oneliner":"현지에서 마셔본 술만 추천합니다.",
      "bio":"전 세계를 떠돌며 그 동네 술을 마셔온 여행 유튜버. 스코틀랜드 증류소부터 "
@@ -103,7 +105,7 @@ INFLUENCERS = [
         (3194,"켄터키에서 마신 그대로. 콜라 섞으면 미국이 됩니다."),
         (5390,"도쿄 골목 어느 바에서나 이걸로 하이볼을 말아줍니다."),
      ]},
-    {"code":"jurakworld","handle":"@주락이월드","name":"주락이월드","hot":True,
+    {"code":"jurakland","handle":"@주락이랜드","name":"주락이랜드","hot":True,
      "ava":"🥃","col":"#41643f","tags":["위스키 리뷰","싱글몰트"],"followers":"34만",
      "oneliner":"마셔보고 솔직하게, 위스키 리뷰의 기준.",
      "bio":"국내 대표 주류 리뷰 채널. 광고와 리뷰를 분리하는 원칙으로 신뢰를 쌓아왔습니다. "
@@ -115,7 +117,7 @@ INFLUENCERS = [
         (2962,"같은 셰리인데 절반 가격에 도수는 46%. 요즘 제일 바쁜 증류소."),
         (8019,"피트 입문은 쿼터캐스크보다 10년부터. 정석대로 가세요."),
      ]},
-    {"code":"sulsuno","handle":"@술수노","name":"술수노","hot":False,
+    {"code":"ssulsuno","handle":"@쑬수노","name":"쑬수노","hot":False,
      "ava":"🍸","col":"#5b3a6e","tags":["꿀조합","입문"],"followers":"42만",
      "oneliner":"술알못도 따라 하는 꿀조합 레시피.",
      "bio":"'이렇게 마시면 맛있어요'를 가장 쉽게 알려주는 채널. 편의점 재료로 만드는 "
@@ -127,7 +129,7 @@ INFLUENCERS = [
         (5229,"부드럽고 꽃향기. 글렌피딕이랑 비교하며 마셔보세요."),
         (5390,"토닉워터 4 : 가쿠빈 1 + 레몬. 이게 꿀조합의 시작."),
      ]},
-    {"code":"newsulletter","handle":"@뉴술레터","name":"뉴술레터","hot":False,
+    {"code":"saesulletter","handle":"@새술레터","name":"새술레터","hot":False,
      "ava":"📮","col":"#2f5d62","tags":["트렌드","뉴스레터"],"followers":"11만",
      "oneliner":"이번 주 술 트렌드, 메일함보다 먼저.",
      "bio":"매주 술 트렌드를 큐레이션하는 뉴스레터. 지금 바·보틀숍에서 무엇이 팔리는지, "
@@ -160,24 +162,24 @@ IMAP = {i["code"]: i for i in INFLUENCERS}
 # status: live(진행 중) / upcoming(예정) / ended(마감 — SOLD OUT 아카이브)
 # 메인의 모든 이벤트 카드는 클릭 시 해당 인플루언서 페이지로 이동.
 EVENTS = [
-    {"id":"e1","inf":"chimchakman","pv":2962,"mech":"crowd","status":"live",
+    {"id":"e1","inf":"danghwangman","pv":2962,"mech":"crowd","status":"live",
      "title":"글렌알라키 12년 공동구매","goal":60,"sold":49,
      "ends":"06.19(금) 20:00 마감","note":"60병 모이면 확정 매입 — 미달 시 전액 환불"},
-    {"id":"e2","inf":"jurakworld","pv":19904,"mech":"preorder","status":"live",
+    {"id":"e2","inf":"jurakland","pv":19904,"mech":"preorder","status":"live",
      "title":"맥캘란 12년 셰리 오크 예약","alloc":40,"left":7,
      "ends":"07.03 입고 — 입고 후 픽업","note":"국내 배정 40병 확정분"},
-    {"id":"e3","inf":"ppanibottle","pv":8019,"mech":"stock","status":"live",
+    {"id":"e3","inf":"ppeonibottle","pv":8019,"mech":"stock","status":"live",
      "title":"라프로익 10년 선착순","total":30,"left":6,
      "ends":"소진 시 종료 — 결제 즉시 픽업","note":"보유 재고 30병이 전부"},
-    {"id":"e4","inf":"sulsuno","status":"upcoming",
+    {"id":"e4","inf":"ssulsuno","status":"upcoming",
      "title":"시크릿 하이볼 세트 공동구매","open_at":"06.20(토) 20:00 오픈",
      "note":"오픈과 동시에 구성 공개 — 알림을 걸어두세요"},
-    {"id":"e5","inf":"newsulletter","status":"upcoming",
+    {"id":"e5","inf":"saesulletter","status":"upcoming",
      "title":"버번 리바이벌 컬렉션","open_at":"06.27(토) 20:00 오픈",
-     "note":"이번 주 뉴술레터에서 다룬 그 버번들"},
+     "note":"이번 주 새술레터에서 다룬 그 버번들"},
     {"id":"e6","inf":"veluga","pv":31081,"status":"ended",
      "title":"탐나불린 셰리 캐스크 단독 소싱","result":"30병 · 3시간 만에 완판"},
-    {"id":"e7","inf":"chimchakman","pv":5390,"status":"ended",
+    {"id":"e7","inf":"danghwangman","pv":5390,"status":"ended",
      "title":"가쿠빈 하이볼 공동구매","result":"200병 · 이틀 만에 완판"},
 ]
 MECH_LABEL = {"crowd": "공동구매", "preorder": "예약", "stock": "선착순"}
