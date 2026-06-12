@@ -143,23 +143,22 @@
     <div>주류는 만 19세 이상만 구매·픽업할 수 있습니다.</div>
     <div style="margin-top:10px;"><b>(주)벨루가</b> · 사업자/통신판매업/주류통신판매 승인 정보 (확정 후 기재)</div>
   </footer>
-
-  <script>
-    (function () {
-      var guest = document.getElementById('guestView'), member = document.getElementById('memberView');
-      function render() {
-        var m = VLGCart.isMember();
-        guest.style.display = m ? 'none' : '';
-        member.style.display = m ? '' : 'none';
-      }
-      render();
-      var lo = document.getElementById('logoutBtn');
-      if (lo) lo.addEventListener('click', function (e) { e.preventDefault(); VLGCart.setMember(false); location.reload(); });
-      var li = document.getElementById('loginBtn');
-      if (li) li.addEventListener('click', function (e) { e.preventDefault(); VLGCart.setMember(true); location.reload(); });
-    })();
-  </script>
 </div>
 <script src="cart.js?v=1"></script>
+<script>
+  (function () {
+    var guest = document.getElementById('guestView'), member = document.getElementById('memberView');
+    function render() {
+      var m = VLGCart.isMember();
+      guest.style.display = m ? 'none' : '';
+      member.style.display = m ? '' : 'none';
+    }
+    render();
+    var lo = document.getElementById('logoutBtn');
+    if (lo) lo.addEventListener('click', function (e) { e.preventDefault(); VLGCart.setMember(false); location.reload(); });
+    var li = document.getElementById('loginBtn');
+    if (li) li.addEventListener('click', function (e) { e.preventDefault(); VLGCart.setMember(true); location.reload(); });
+  })();
+</script>
 </body>
 </html>

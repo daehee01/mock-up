@@ -129,7 +129,7 @@ EVENTS = [
      "specs":[("연산","<b>18</b>년"),("캐스크","셰리 벗 #4012"),("국내 배정","30병 한정"),("도수","54.2% C/S")],
      "source":[
         "이 보틀은 매장 진열대에서 살 수 없습니다. 증류소가 한 통 단위로만 내놓는 <b>싱글 캐스크 원액</b>이라, 수입사도 주문이 모여야 들여올 수 있습니다.",
-        "벨루가는 전국 <b>13,000개 매장에 술을 공급하는 주류 도매상</b>입니다. 그 공급망 덕분에 일반 소매가 접근하지 못하는 캐스크 단위 물량을 직접 협상할 수 있습니다.",
+        "벨루가는 전국 13,000개 매장의 주류 도매 거래가 오가는 <b>국내 유일의 주류 도매 유통 플랫폼</b>입니다. 도매 거래 데이터를 AI로 분석하기 때문에, 캐스크 단위 물량이 풀리는 순간을 가장 먼저 포착하고 직접 협상할 수 있습니다.",
         "30병의 예약이 모이면 벨루가가 캐스크를 확정 매입하고, 7월 초 입고 후 가까운 픽업 매장에서 받아보실 수 있습니다.",
      ]},
 
@@ -141,7 +141,7 @@ EVENTS = [
      "specs":[("연산","<b>21</b>년"),("물량","1차 선적분"),("국내 배정","60병 확정"),("도수","57.1% C/S")],
      "source":[
         "21년 캐스크 스트렝스는 증류소가 국가별로 수량을 배정하는 <b>얼로케이션 보틀</b>입니다. 한국 배정분은 60병 — 추가 입고는 다음 배정을 기다려야 합니다.",
-        "벨루가는 도매 공급망의 직거래 라인으로 이번 1차 선적분 60병 전량을 확보했습니다. 이미 46병이 예약되어 <b>14병 남았습니다</b>.",
+        "벨루가는 도매 유통 플랫폼의 직거래 라인으로 이번 1차 선적분 60병 전량을 확보했습니다. 이미 46병이 예약되어 <b>14병 남았습니다</b>.",
         "7월 3일 입고 예정이며, 입고 즉시 픽업 코드가 발급됩니다.",
      ]},
 
@@ -153,7 +153,7 @@ EVENTS = [
      "inf":{"handle":"@위스키한모금","comment":"피노 누아 피니시는 호불호 없이 선물용으로도 좋아요. 남은 수량 보고 서두르세요."},
      "specs":[("캐스크","저먼 피노 누아"),("물량","보유 재고 20병"),("남은 수량","<b>6</b>병"),("도수","40%")],
      "source":[
-        "수입사 마지막 재고 20병을 벨루가가 통째로 가져왔습니다. 이 물량이 끝나면 국내 정식 유통분은 없습니다.",
+        "유통 데이터를 모니터링하던 벨루가가 수입사 마지막 재고 20병을 통째로 가져왔습니다. 이 물량이 끝나면 국내 정식 유통분은 없습니다.",
         "보유 재고라 <b>결제 즉시 픽업 코드가 발급</b>되고, 가까운 매장에서 당일 픽업할 수 있습니다.",
      ]},
 
@@ -164,7 +164,7 @@ EVENTS = [
      "desc":"여름 물량이 너무 많이 들어왔습니다. 창고 비울 때까지 최대 31% — 싸니까 빨리 가져가세요.",
      "products":["0003","0007","0005"],
      "features":[
-        ("📦 과잉 재고 정리","수요 예측보다 물량이 많이 들어왔어요. 도매상 창고를 비우는 동안만 이 가격입니다."),
+        ("📦 과잉 재고 정리","수요 예측보다 물량이 많이 들어왔어요. 물류 창고를 비우는 동안만 이 가격입니다."),
         ("🧊 여름에 제일 맛있는 술","화이트와인 캐스크 특유의 청량감. 칠링하거나 하이볼로 마시기 좋은 계절입니다."),
         ("🏪 오늘 결제, 오늘 픽업","보유 재고라 결제 즉시 픽업 코드 발급. 가까운 매장에서 바로 받아가세요."),
      ]},
@@ -222,7 +222,10 @@ def footer():
   </footer>'''
 
 
-def page(title, body, base=""):
+def page(title, body, base="", tail="", pad=False):
+    # tail(스티키 바·모달·인라인 스크립트)은 반드시 cart.js 로드 "뒤"에 둠 —
+    # VLGCart를 쓰는 인라인 코드가 먼저 실행되면 ReferenceError로 렌더가 죽음.
+    cls = "wrap pad-cta" if pad else "wrap"
     return f'''<!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -234,10 +237,11 @@ def page(title, body, base=""):
 <link rel="stylesheet" href="{base}v2.css?v={VERSION}" />
 </head>
 <body>
-<div class="wrap">
+<div class="{cls}">
 {body}
 </div>
 <script src="{base}cart.js?v={VERSION}"></script>
+{tail}
 </body>
 </html>
 '''
@@ -562,7 +566,7 @@ def build_wisinssa():
   <section class="wss-hero">
     <div class="mark rise d1">위신<b>싸</b></div>
     <div class="pun rise d2">앗! <b>위</b>스키가 <b>신</b>발보다 <b>싸</b>다!</div>
-    <div class="d rise d2">도매상 창고의 과잉 재고·시즌 임박분을 통 크게 풉니다.<br />싸니까 빨리 — 소진되면 끝나요.</div>
+    <div class="d rise d2">도매 유통 과정의 과잉 재고·시즌 임박분을 통 크게 풉니다.<br />싸니까 빨리 — 소진되면 끝나요.</div>
   </section>
 
   <!-- 진행 중 떨이 이벤트 -->
@@ -847,11 +851,8 @@ def build_event_limited(e):
   </section>
 
 {footer()}'''
-    tail = f'\n{cta_bar}\n{tail_modal}\n{STORE_SCRIPT}\n{COUNTDOWN_JS}'
-    html = page(e["title"] + " — 벨루가", body, base=base)
-    html = html.replace('<div class="wrap">', '<div class="wrap pad-cta">')
-    html = html.replace('</div>\n<script src=', '</div>\n' + tail + '\n<script src=')
-    return html
+    tail = f'{cta_bar}\n{tail_modal}\n{STORE_SCRIPT}\n{COUNTDOWN_JS}'
+    return page(e["title"] + " — 벨루가", body, base=base, tail=tail, pad=True)
 
 
 def build_event_listing(e):
@@ -1008,10 +1009,7 @@ def build_product(p):
   <button type="button" class="btn btn-primary" data-add-cart>장바구니 담기</button>
 </div>
 ''' + STORE_SCRIPT
-    html = page(p["name"] + " — 벨루가", body, base=base)
-    html = html.replace('<div class="wrap">', '<div class="wrap pad-cta">')
-    html = html.replace('</div>\n<script src=', '</div>\n' + tail + '\n<script src=')
-    return html
+    return page(p["name"] + " — 벨루가", body, base=base, tail=tail, pad=True)
 
 
 # ---------------- about.html — 소싱 권위 ----------------
@@ -1022,7 +1020,7 @@ def build_about():
     <div class="inner">
       <div class="mark rise d1" style="font-size:clamp(64px,22vw,110px);">벨루<b>가</b></div>
       <div class="rise d2" style="font-size:17px;color:rgba(255,255,255,.82);margin-top:20px;line-height:1.72;letter-spacing:-0.015em;">
-        전국 13,000개 매장에 술을 대는 도매상이<br /><em style="color:var(--amber);font-style:normal;font-weight:700;">직접 엽니다.</em>
+        국내 유일의 주류 도매 유통 플랫폼이<br /><em style="color:var(--amber);font-style:normal;font-weight:700;">직접 엽니다.</em>
       </div>
     </div>
   </section>
@@ -1030,7 +1028,7 @@ def build_about():
   <section class="sec">
     <div class="eyebrow eyebrow--amber">THE SOURCE</div>
     <div class="h2">왜 벨루가에만<br />이 보틀이 있을까요?</div>
-    <p class="lead">캐스크 단위 물량, 국가별 배정 보틀, 수입사 마지막 재고 — 이런 술은 소매 매장 진열대에 오르기 전에 사라집니다. 벨루가는 <b style="color:var(--ink);">전국 13,000개 매장에 23,000종의 술을 공급하는 주류 도매상</b>이라, 그 물량을 공급망에서 직접 가져옵니다.</p>
+    <p class="lead">캐스크 단위 물량, 국가별 배정 보틀, 수입사 마지막 재고 — 이런 술은 소매 매장 진열대에 오르기 전에 사라집니다. 벨루가는 13,000개 매장 · 23,000종의 술이 거래되는 <b style="color:var(--ink);">국내 유일의 주류 도매 유통 플랫폼</b>입니다. 도매 거래 데이터를 <b style="color:var(--ink);">AI로 분석·최적화</b>하기 때문에, 어떤 보틀이 언제 어디서 풀리는지 누구보다 먼저 알고 직접 가져옵니다.</p>
   </section>
 
   <section class="sec sec--tight">
@@ -1054,7 +1052,7 @@ def build_about():
 
   <section class="sec">
     <div class="eyebrow">TRUST</div>
-    <div class="h2">도매상이 파니까, 전부 정품.</div>
+    <div class="h2">플랫폼이 직접 거래하니까, 전부 정품.</div>
     <p class="lead">벨루가의 모든 보틀은 정식 수입·유통 경로를 거친 <b style="color:var(--ink);">100% 정품</b>입니다. 결제·픽업 전 과정에서 만 19세 이상 성인인증을 거치며, 미성년자에게는 판매하지 않습니다.</p>
   </section>
 
@@ -1064,7 +1062,7 @@ def build_about():
   </section>
 
 {footer()}'''
-    return page("벨루가 — 도매상이 직접 엽니다", body)
+    return page("벨루가 — 주류 도매 유통 플랫폼이 직접 엽니다", body)
 
 
 # ---------------- mypage.html (5단계 진행바) ----------------
@@ -1167,24 +1165,23 @@ def build_mypage():
   </section>
   </div><!-- /memberView -->
 
-{footer()}
-
-  <script>
-    (function () {{
-      var guest = document.getElementById('guestView'), member = document.getElementById('memberView');
-      function render() {{
-        var m = VLGCart.isMember();
-        guest.style.display = m ? 'none' : '';
-        member.style.display = m ? '' : 'none';
-      }}
-      render();
-      var lo = document.getElementById('logoutBtn');
-      if (lo) lo.addEventListener('click', function (e) {{ e.preventDefault(); VLGCart.setMember(false); location.reload(); }});
-      var li = document.getElementById('loginBtn');
-      if (li) li.addEventListener('click', function (e) {{ e.preventDefault(); VLGCart.setMember(true); location.reload(); }});
-    }})();
-  </script>'''
-    return page("벨루가 — 마이페이지", body)
+{footer()}'''
+    tail = '''<script>
+  (function () {
+    var guest = document.getElementById('guestView'), member = document.getElementById('memberView');
+    function render() {
+      var m = VLGCart.isMember();
+      guest.style.display = m ? 'none' : '';
+      member.style.display = m ? '' : 'none';
+    }
+    render();
+    var lo = document.getElementById('logoutBtn');
+    if (lo) lo.addEventListener('click', function (e) { e.preventDefault(); VLGCart.setMember(false); location.reload(); });
+    var li = document.getElementById('loginBtn');
+    if (li) li.addEventListener('click', function (e) { e.preventDefault(); VLGCart.setMember(true); location.reload(); });
+  })();
+</script>'''
+    return page("벨루가 — 마이페이지", body, tail=tail)
 
 
 # ---------------- cart.html ----------------
@@ -1312,10 +1309,7 @@ def build_cart():
   </div>
 </div>
 ''' + CART_SCRIPT
-    html = page("벨루가 — 장바구니", body)
-    html = html.replace('<div class="wrap">', '<div class="wrap pad-cta">')
-    html = html.replace('</div>\n<script src=', '</div>\n' + tail + '\n<script src=')
-    return html
+    return page("벨루가 — 장바구니", body, tail=tail, pad=True)
 
 
 # ---------------- join.html ----------------
